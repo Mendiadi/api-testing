@@ -1,6 +1,7 @@
 import pytest
 import logging
 import json
+from Models.tag import  Tag
 from Models.pets import Pet, Status
 from API.pets_api import PetApi
 LOGGER = logging.getLogger(__name__)
@@ -49,17 +50,26 @@ def test_post_pet(get_pet,get_pet_api):
     assert code == 200
     assert response == get_pet.to_json()
 
+def test_post_id_pet(get_pet_api):
+    LOGGER.info("test_post_id_pet execute")
+    api = get_pet_api
+    code,response = api.post_id(4,"adi","sold")
+    try:
+        LOGGER.info(f"response: {response.to_json()}, code: {code}")
+    except:
+        LOGGER.info(f"response: {response.json()}, code: {code}")
+    assert code == 200
+    assert response.name == "adi" and response.status == "sold" and response.id == 4
 
-
-def test_find_by_tag(get_pet,get_pet_api):
-
+def test_find_by_tag(get_pet_api):
+    tags = [Tag(1,"test"),Tag(2,"foo")]
     LOGGER.info("test_find_by_tags execute")
-    api =get_pet_api
-    code,response = api.find_pet_by_tag([get_pet.tag])
+    api = get_pet_api
+    code,response = api.find_pet_by_tag(tags)
     assert code == 200
     for pet in response:
-        LOGGER.info(f"response for {get_pet.tag}: {pet.to_json()}")
-        assert pet.tag.to_json() == get_pet.tag.to_json()
+
+        assert pet.tag.to_json() in tags
 
 def test_find_pet_by_id(get_pet_api):
     LOGGER.info("test_find_pet_by_id execute")

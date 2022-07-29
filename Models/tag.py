@@ -18,6 +18,6 @@ class Tag(BaseObject):
     def name(self):
         del self._name
 
-    def __init__(self):
-        self._id = 1
-        self._name = ""
+    def __init__(self,id:int=1,name:str=""):
+        self._id = id
+        self._name = name
