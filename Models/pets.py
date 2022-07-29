@@ -1,6 +1,7 @@
 from enum import Enum
 from Models.base_obj import BaseObject
 from Models.tag import Tag
+from Models.category import Category
 class Status(Enum):
     available = "available"
     pending = "pending"
@@ -10,7 +11,7 @@ class Pet(BaseObject):
     def __init__(self,
                  id: int,
                  name: str= None,
-                 category:dict[int,str]= None,
+                 category: Category = None,
                  photoUrls= None,
                  tags: Tag= None,
                  status:Status = None):

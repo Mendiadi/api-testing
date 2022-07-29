@@ -70,6 +70,7 @@ def test_find_by_tag(get_pet_api):
     code, response = api.find_pet_by_tag(tags)
     assert code == 200
     for pet in response:
+
         assert pet.tag.to_json() in tags
 
 
