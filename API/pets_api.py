@@ -20,8 +20,14 @@ class PetApi:
 
     def post_id(self,id: int,name:str,status:str) -> [Pet]:
         response = requests.session().post(f"{self._url}/pet/{id}?name={name}&status={status}")
-        pet = Pet(**response.json())
-        return response.status_code, pet
+        print(response)
+
+        if response.ok:
+            pet = response.json()
+            pet_obj = Pet(**pet)
+            return response.status_code, pet_obj
+        else:
+            return response.status_code,response.content
 
 
     def find_pet_by_tag(self,tags:[Tag]) -> [Pet]:
@@ -53,4 +59,6 @@ class PetApi:
         return response.status_code, response.json()
 
 if __name__ == '__main__':
-    pass
+    a = PetApi()
+    c, p=a.post_id(1,"adi","sold")
+    print(c,p)
