@@ -14,14 +14,14 @@ PET_DATA = {
   ],
   "tags": [
     {
-      "id": 1,
+      "id": 0,
       "name": "string"
     }
   ],
   "status": "available"
 }
 
-PET_DATA2 = {  "id": 25,
+PET_DATA2 = {  "id": 10,
   "name": "sample",
   "category": {
     "id": 1,
@@ -37,4 +37,15 @@ PET_DATA2 = {  "id": 25,
     }
   ],
   "status": "sold"
+}
+
+USER_DATA = {
+  "id": 10,
+  "username": "theUser",
+  "firstName": "John",
+  "lastName": "James",
+  "email": "john@email.com",
+  "password": "12345",
+  "phone": "12345",
+  "userStatus": 1
 }

@@ -2,12 +2,12 @@ from Models.base_obj import BaseObject
 
 
 class User(BaseObject):
-    def __init__(self, id: int, username: str, firstname: str, lastname: str, email: str, password: str, phone: str,
+    def __init__(self, id: int, username: str, firstName: str, lastName: str, email: str, password: str, phone: str,
                  userStatus: int):
         self._id = id
         self._username = username
-        self._firstname = firstname
-        self._lastname = lastname
+        self._firstName = firstName
+        self._lastName = lastName
         self._email = email
         self._password = password
         self._phone = phone

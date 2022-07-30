@@ -17,7 +17,10 @@ class PetApi:
 
     def put_pet(self, pet: Pet) -> [dict]:
         response =  self.session.put(f"{self._url}/pet", json=pet.to_json())
-        return response.status_code, json.loads(response.content)
+        try:
+            return response.status_code, response.json()
+        except:
+            return response.status_code, response.content
 
     def post_id(self, id: int, name: str, status: str) -> [Pet]:
         response =  self.session.post(f"{self._url}/pet/{id}?name={name}&status={status}")

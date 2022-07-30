@@ -6,14 +6,14 @@ from Models.pets import Pet, Status
 from Models.user import User
 from API.pets_api import PetApi
 from API.api_user import ApiUser
-from API.constent import PET_DATA,PET_DATA2
+from API.constent import PET_DATA,PET_DATA2,USER_DATA
 LOGGER = logging.getLogger(__name__)
 
 ################# FIXTURES #################################
 
 @pytest.fixture(scope="session")
 def get_user()->User:
-    user = User(20,"myUser","israel","israeli","israel@walla.net","12345678","0505550000",1)
+    user = User(**USER_DATA)
     return user
 
 @pytest.fixture(scope="session")
@@ -46,7 +46,7 @@ def test_post_pet(get_pet_api):
 def test_put_pet(get_pet_api):
     LOGGER.info("test_put_pet executing")
     api = get_pet_api
-    pet = Pet(**PET_DATA)
+    pet = Pet(**PET_DATA2)
     code, response = api.put_pet(pet)
     LOGGER.info(f"\nresponse pet = {response}")
     assert code == 200
@@ -77,28 +77,28 @@ def test_find_by_tag(get_pet_api):
         assert pet.tag.to_json() in tags
 
 
-def test_post_id_pet(get_pet,get_pet_api):
+def test_post_id_pet(get_pet_api):
     LOGGER.info("test_post_id_pet execute")
     api = get_pet_api
-    code, response = api.post_id(get_pet.id,"adi","sold")
+    code, response = api.post_id(PET_DATA2['id'],"adi","sold")
     try:
         LOGGER.info(f"response: {response.to_json()}, code: {code}")
     except:
         LOGGER.info(f"response: {response}, code: {code}")
     assert code == 200
-    assert response.name == "adi" and response.status == "sold" and response.id == 1
+    assert response.name == "adi" and response.status == "sold" and response.id == 10
 
 
-def test_find_pet_by_id(get_pet,get_pet_api):
+def test_find_pet_by_id(get_pet_api):
     LOGGER.info("test_find_pet_by_id execute")
     api = get_pet_api
-    code, pet = api.find_pet_by_id(get_pet.id)
+    code, pet = api.find_pet_by_id(PET_DATA2['id'])
     try:
         LOGGER.info(f"response: {pet.to_json()} code: {code}")
     except:
         LOGGER.info(f"response: {pet} code: {code}")
     assert code == 200
-    assert pet.id == 1
+    assert pet.id == 10
 
 def test_delete_pet_by_id(get_pet,get_pet_api):
     LOGGER.info("test_delete_pet_by_id executing")
@@ -112,8 +112,24 @@ def test_delete_pet_by_id(get_pet,get_pet_api):
 
 ############## USER TESTS #############################
 
-def test_get_user_logout(get_user_api,get_user):
+def test_post_create_user(get_user_api,get_user):
+    api = get_user_api
+    code, response = api.post_create_user(get_user.to_json())
+    LOGGER.info(f"response: {response}, code: {code}")
+    assert code == 200
+
+
+def test_post_create_users(get_user,get_user_api):
+    api = get_user_api
+    code, response = api.post_create_user_with_list([get_user.to_json()])
+    LOGGER.info(f"response - {response}, code: {code}")
+    assert code == 200
+
+
+
+def test_get_user_logout(get_user_api):
     api = get_user_api
     code, response = api.get_user_logout()
+    LOGGER.info(f"response: {response}, code: {code}")
     assert code == 200
     assert response == "User logged out"
