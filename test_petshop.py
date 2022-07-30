@@ -76,7 +76,7 @@ def test_get_pet_by_status(get_pet_api, status, excepted):
     code, pets = api.get_pet_by_status(status)
     assert code == 200
     for pet in pets:
-        LOGGER.info(f"PET CONTENT OF STATUS {status} : {pet.to_json()}")
+        LOGGER.info(f"PET CONTENT OF STATUS {status} : {pet.to_json()}\n")
         assert pet.status == excepted
 
 
