@@ -3,7 +3,7 @@ URL = "https://petstore3.swagger.io/api/v3"
 HEADER_JSON ={"accept": "application/json"}
 
 PET_DATA = {
-  "id": 10,
+  "id": 1,
   "name": "doggie",
   "category": {
     "id": 1,
@@ -36,5 +36,5 @@ PET_DATA2 = {  "id": 25,
       "name": "string"
     }
   ],
-  "status": "available"
+  "status": "sold"
 }

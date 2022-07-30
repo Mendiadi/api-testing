@@ -38,7 +38,7 @@ class PetApi:
                 new_pet = Pet(**pet)
                 result_list.append(new_pet)
             return response.status_code, result_list
-        return response.status_code, response.json()
+        return response.status_code, response.content
 
     def get_pet_by_status(self, status: str) -> [Pet]:
         response =  self.session.get(url=f"{self._url}/pet/findByStatus?status={status}")
@@ -48,7 +48,7 @@ class PetApi:
                 new_pet = Pet(**pet)
                 result_list.append(new_pet)
             return response.status_code, result_list
-        return response.status_code, response.json()
+        return response.status_code, response.content
 
     def find_pet_by_id(self, id: int) -> (int, Pet):
         response =  self.session.get(url=f"{self._url}/pet/{id}")
@@ -63,5 +63,5 @@ class PetApi:
 
 if __name__ == '__main__':
     a = PetApi()
-    c, p = a.find_pet_by_id(1)
+    c, p = a.post_id(PET_DATA['id'],"adi","sold")
     print(c, p)
