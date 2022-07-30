@@ -1,6 +1,5 @@
 import pytest
 import logging
-import json
 from Models.tag import Tag
 from Models.pets import Pet, Status
 from API.pets_api import PetApi
@@ -84,3 +83,10 @@ def test_find_pet_by_id(get_pet_api):
         LOGGER.info(f"response: {pet} code: {code}")
     assert code == 200
     assert pet.id == 10
+
+def test_delete_pet_by_id(get_pet,get_pet_api):
+    pet = get_pet
+    api = get_pet_api
+    code, response = api.delete_pet_by_id(pet.id)
+    assert code == 200
+    assert response == "Pet deleted"
