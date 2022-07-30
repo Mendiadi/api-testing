@@ -45,7 +45,7 @@ def get_store_api() -> StoreApi:
 
 ################### PET TESTS ##############################
 
-
+@pytest.mark.pet
 def test_post_pet(get_pet_api):
     LOGGER.info("test_post_pet executing")
     api = get_pet_api
@@ -56,6 +56,7 @@ def test_post_pet(get_pet_api):
     assert json.loads(response) == pet.to_json()
 
 
+@pytest.mark.pet
 def test_put_pet(get_pet_api):
     LOGGER.info("test_put_pet executing")
     api = get_pet_api
@@ -66,10 +67,11 @@ def test_put_pet(get_pet_api):
     assert response == pet.to_json()
 
 
+@pytest.mark.pet
 @pytest.mark.parametrize("status,excepted",
-                         [(("sold"), (Status.sold.value)),
-                          (("pending"), (Status.pending.value)),
-                          (("available"), (Status.available.value))])
+                         [("sold", Status.sold.value),
+                          ("pending", Status.pending.value),
+                          ("available", Status.available.value)])
 def test_get_pet_by_status(get_pet_api, status, excepted):
     api = get_pet_api
     LOGGER.info("test_get_pet_by_status executing")
@@ -80,6 +82,7 @@ def test_get_pet_by_status(get_pet_api, status, excepted):
         assert pet.status == excepted
 
 
+@pytest.mark.pet
 def test_find_by_tag(get_pet_api):
     tags = [Tag(1, "test"), Tag(2, "foo")]
     LOGGER.info("test_find_by_tags execute")
@@ -90,30 +93,33 @@ def test_find_by_tag(get_pet_api):
         assert pet.tag.to_json() in tags
 
 
+@pytest.mark.pet
 def test_post_id_pet(get_pet_api):
     LOGGER.info("test_post_id_pet execute")
     api = get_pet_api
     code, response = api.post_id(PET_DATA2['id'], "adi", "sold")
     try:
         LOGGER.info(f"response: {response.to_json()}, code: {code}")
-    except:
+    except Exception:
         LOGGER.info(f"response: {response}, code: {code}")
     assert code == 200
     assert response.name == "adi" and response.status == "sold" and response.id == 10
 
 
+@pytest.mark.pet
 def test_find_pet_by_id(get_pet_api):
     LOGGER.info("test_find_pet_by_id execute")
     api = get_pet_api
     code, pet = api.find_pet_by_id(PET_DATA2['id'])
     try:
         LOGGER.info(f"response: {pet.to_json()} code: {code}")
-    except:
+    except Exception:
         LOGGER.info(f"response: {pet} code: {code}")
     assert code == 200
     assert pet.id == 10
 
 
+@pytest.mark.pet
 def test_delete_pet_by_id(get_pet, get_pet_api):
     LOGGER.info("test_delete_pet_by_id executing")
     pet = get_pet
@@ -125,7 +131,7 @@ def test_delete_pet_by_id(get_pet, get_pet_api):
 
 
 ############## USER TESTS #############################
-
+@pytest.mark.user
 def test_post_create_user(get_user_api, get_user):
     api = get_user_api
     code, response = api.post_create_user(get_user.to_json())
@@ -133,6 +139,7 @@ def test_post_create_user(get_user_api, get_user):
     assert code == 200
 
 
+@pytest.mark.user
 def test_post_create_users(get_user, get_user_api):
     api = get_user_api
     code, response = api.post_create_user_with_list([get_user.to_json()])
@@ -140,6 +147,7 @@ def test_post_create_users(get_user, get_user_api):
     assert code == 200
 
 
+@pytest.mark.user
 def test_get_user_login(get_user, get_user_api):
     api = get_user_api
     code, response = api.get_user_login(get_user.username, get_user.password)
@@ -147,6 +155,7 @@ def test_get_user_login(get_user, get_user_api):
     assert code == 200
 
 
+@pytest.mark.user
 def test_put_update_user(get_user_api, get_user):
     api = get_user_api
     code, response = api.put_update_user(get_user.username)
@@ -154,6 +163,7 @@ def test_put_update_user(get_user_api, get_user):
     assert code == 200
 
 
+@pytest.mark.user
 def test_get_user_logout(get_user_api):
     api = get_user_api
     code, response = api.get_user_logout()
@@ -162,6 +172,7 @@ def test_get_user_logout(get_user_api):
     assert response == "User logged out"
 
 
+@pytest.mark.user
 def test_get_user_by_username(get_user_api, get_user):
     api = get_user_api
     response = api.get_user_by_username(get_user.username)
@@ -169,6 +180,7 @@ def test_get_user_by_username(get_user_api, get_user):
     assert response.id == get_user.id and response.username == get_user.username
 
 
+@pytest.mark.user
 def test_delete_user(get_user_api, get_user):
     api = get_user_api
     code, response = api.delete_user(get_user.username)
@@ -177,7 +189,7 @@ def test_delete_user(get_user_api, get_user):
 
 
 ############ STORE TEST#####################
-
+@pytest.mark.store
 def test_get_inventory(get_store_api):
     api = get_store_api
     code, response = api.get_inventory()
