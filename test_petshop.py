@@ -7,6 +7,8 @@ from Models.user import User
 from API.pets_api import PetApi
 from API.api_user import ApiUser
 from API.constent import PET_DATA,PET_DATA2,USER_DATA
+from API.store_api import StoreApi
+
 LOGGER = logging.getLogger(__name__)
 
 ################# FIXTURES #################################
@@ -30,6 +32,11 @@ def get_pet_api() -> PetApi:
 @pytest.fixture(scope="session")
 def get_pet() -> Pet:
     return Pet(**PET_DATA)
+
+@pytest.fixture(scope="session")
+def get_store_api() -> StoreApi:
+    api = StoreApi()
+    return api
 
 ################### PET TESTS ##############################
 
@@ -157,3 +164,12 @@ def test_delete_user(get_user_api,get_user):
     code,response = api.delete_user(get_user.username)
     LOGGER.info(f"code: {code}, response : {response}")
     assert code == 200
+
+############ STORE TEST#####################
+
+def test_get_inventory(get_store_api):
+    api = get_store_api
+    code, response = api.get_inventory()
+    LOGGER.info(f"code : {code}, response:{response}")
+    assert code == 200
+

@@ -1,6 +1,6 @@
 
-URL = "https://petstore3.swagger.io/api/v3"
-HEADER_JSON ={"accept": "application/json"}
+
+
 
 PET_DATA = {
   "id": 1,

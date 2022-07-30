@@ -1,9 +1,4 @@
-
-from abc import ABC
-
-
-
-class BaseObject(ABC):
+class BaseObject:
 
     def to_json(self) -> dict:
         result = {}
