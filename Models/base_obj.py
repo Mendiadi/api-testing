@@ -6,4 +6,3 @@ class BaseObject:
             if v is not None:
                 result[k.replace("_","")] = v
         return result
-

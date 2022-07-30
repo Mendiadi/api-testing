@@ -1,41 +1,40 @@
-
 from Models.user import User
 from API.baseApi import BaseApi
-class ApiUser(BaseApi):
 
+
+class ApiUser(BaseApi):
 
     def __init__(self):
         super().__init__()
         self._url = f"{self._base_url}/user"
 
-    def get_user_login(self,username:str,password:str) -> (int,str):
+    def get_user_login(self, username: str, password: str) -> (int, str):
         response = self.session.get(f"{self._url}/login?username={username}&password={password}")
         return response.status_code, response.text
 
-
-    def get_user_logout(self) -> (int,str):
+    def get_user_logout(self) -> (int, str):
         response = self.session.get(f"{self._url}/logout")
-        return response.status_code,response.text
-
-    def post_create_user(self,data: dict):
-        response = self.session.post(f"{self._url}",json=data)
         return response.status_code, response.text
 
-    def post_create_user_with_list(self,data: list):
-        response = self.session.post(f"{self._url}/createWithList",json=data)
+    def post_create_user(self, data: dict):
+        response = self.session.post(f"{self._url}", json=data)
         return response.status_code, response.text
 
-    def get_user_by_username(self,username:str) -> (User,str):
+    def post_create_user_with_list(self, data: list):
+        response = self.session.post(f"{self._url}/createWithList", json=data)
+        return response.status_code, response.text
+
+    def get_user_by_username(self, username: str) -> (User, str):
         response = self.session.get(f"{self._url}/{username}")
         if response.ok:
             user = User(**response.json())
             return user
         return response.text
 
-    def put_update_user(self,username:str):
+    def put_update_user(self, username: str):
         response = self.session.put(f"{self._url}/{username}")
         return response.status_code, response.text
 
-    def delete_user(self,username:str):
+    def delete_user(self, username: str):
         response = self.session.delete(f"{self._url}/{username}")
-        return response.status_code,response.text
+        return response.status_code, response.text

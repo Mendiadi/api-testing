@@ -1,7 +1,4 @@
 
-
-
-
 PET_DATA = {
   "id": 1,
   "name": "doggie",
