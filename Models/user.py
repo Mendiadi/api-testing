@@ -20,3 +20,7 @@ class User(BaseObject):
     @property
     def username(self) -> str:
         return self._username
+
+    @property
+    def password(self) -> str:
+        return self._password

@@ -125,6 +125,17 @@ def test_post_create_users(get_user,get_user_api):
     LOGGER.info(f"response - {response}, code: {code}")
     assert code == 200
 
+def test_get_user_login(get_user,get_user_api):
+    api = get_user_api
+    code, response = api.get_user_login(get_user.username,get_user.password)
+    LOGGER.info(f"code : {code} response: {response}")
+    assert code == 200
+
+def test_put_update_user(get_user_api,get_user):
+    api = get_user_api
+    code,response = api.put_update_user(get_user.username)
+    LOGGER.info(f"code: {code}, response: {response}")
+    assert code == 200
 
 
 def test_get_user_logout(get_user_api):
@@ -133,3 +144,16 @@ def test_get_user_logout(get_user_api):
     LOGGER.info(f"response: {response}, code: {code}")
     assert code == 200
     assert response == "User logged out"
+
+def test_get_user_by_username(get_user_api,get_user):
+    api = get_user_api
+    response = api.get_user_by_username(get_user.username)
+    LOGGER.info(f"send : {get_user.to_json()}  \nresponse: {response.to_json()}")
+    assert response.id == get_user.id and response.username == get_user.username
+
+
+def test_delete_user(get_user_api,get_user):
+    api = get_user_api
+    code,response = api.delete_user(get_user.username)
+    LOGGER.info(f"code: {code}, response : {response}")
+    assert code == 200
