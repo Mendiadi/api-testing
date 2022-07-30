@@ -1,4 +1,4 @@
-from base_obj import BaseObject
+from Models.base_obj import BaseObject
 
 
 class User(BaseObject):

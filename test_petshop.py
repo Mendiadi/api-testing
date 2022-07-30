@@ -1,11 +1,23 @@
+import json
 import pytest
 import logging
 from Models.tag import Tag
 from Models.pets import Pet, Status
+from Models.user import User
 from API.pets_api import PetApi
-
+from API.api_user import ApiUser
+from API.constent import PET_DATA,PET_DATA2
 LOGGER = logging.getLogger(__name__)
 
+@pytest.fixture(scope="session")
+def get_user()->User:
+    user = User(20,"myUser","israel","israeli","israel@walla.net","12345678","0505550000",1)
+    return user
+
+@pytest.fixture(scope="session")
+def get_user_api() -> ApiUser:
+    api = ApiUser()
+    return api
 
 @pytest.fixture(scope="session")
 def get_pet_api() -> PetApi:
@@ -15,9 +27,9 @@ def get_pet_api() -> PetApi:
 
 @pytest.fixture(scope="session")
 def get_pet() -> Pet:
-    return Pet(21, "test")
+    return Pet(**PET_DATA)
 
-
+LOGGER.log(2,"Stating executing Pet model tests")
 @pytest.mark.parametrize("status,excepted",
                          [(("sold"), (Status.sold.value)),
                           (("pending"), (Status.pending.value)),
@@ -32,22 +44,24 @@ def test_get_pet_by_status(get_pet_api, status, excepted):
         assert pet.status == excepted
 
 
-def test_put_pet(get_pet, get_pet_api):
+def test_put_pet(get_pet_api):
     LOGGER.info("test_put_pet executing")
     api = get_pet_api
-    code, response = api.put_pet(get_pet)
+    pet = Pet(**PET_DATA2)
+    code, response = api.put_pet(pet)
     LOGGER.info(f"\nresponse pet = {response}")
     assert code == 200
-    assert response == get_pet.to_json()
+    assert response == pet.to_json()
 
 
-def test_post_pet(get_pet, get_pet_api):
+def test_post_pet(get_pet_api):
     LOGGER.info("test_post_pet executing")
     api = get_pet_api
-    code, response = api.post_pet(get_pet)
+    pet = Pet(**PET_DATA2)
+    code, response = api.post_pet(pet)
     LOGGER.info(f"\nresponse pet = {response}")
     assert code == 200
-    assert response == get_pet.to_json()
+    assert json.loads(response) == pet.to_json()
 
 
 def test_post_id_pet(get_pet_api):
@@ -69,24 +83,34 @@ def test_find_by_tag(get_pet_api):
     code, response = api.find_pet_by_tag(tags)
     assert code == 200
     for pet in response:
-
         assert pet.tag.to_json() in tags
 
 
 def test_find_pet_by_id(get_pet_api):
     LOGGER.info("test_find_pet_by_id execute")
     api = get_pet_api
-    code, pet = api.find_pet_by_id(10)
+    code, pet = api.find_pet_by_id(1)
     try:
         LOGGER.info(f"response: {pet.to_json()} code: {code}")
     except:
         LOGGER.info(f"response: {pet} code: {code}")
     assert code == 200
-    assert pet.id == 10
+    assert pet.id == 1
 
 def test_delete_pet_by_id(get_pet,get_pet_api):
+    LOGGER.info("test_delete_pet_by_id executing")
     pet = get_pet
     api = get_pet_api
     code, response = api.delete_pet_by_id(pet.id)
+    LOGGER.info(f"code: {code} msg: {response}")
     assert code == 200
     assert response == "Pet deleted"
+
+
+############## USER TESTS #############################
+LOGGER.log(2,"Stating executing User model tests")
+def test_get_user_logout(get_user_api,get_user):
+    api = get_user_api
+    code, response = api.get_user_logout()
+    assert code == 200
+    assert response == "User logged out"

@@ -1,26 +1,26 @@
 import requests
 from Models.pets import Pet
 from Models.tag import Tag
-
-
+from API.constent import *
+import json
 class PetApi:
 
     def __init__(self):
-        self._url = "https://petstore3.swagger.io/api/v3"
-        self._headers = {"accept": "application/json"}
+        self._url = URL
+        self._headers = HEADER_JSON
         self.session = requests.session()
         self.session.headers.update(self._headers)
 
     def post_pet(self, pet: Pet) -> [dict]:
-        response = requests.session().post(f"{self._url}/pet", data=pet.to_json())
-        return response.status_code, response.json()
+        response =  self.session.post(f"{self._url}/pet", json=pet.to_json())
+        return response.status_code, response.content
 
     def put_pet(self, pet: Pet) -> [dict]:
-        response = requests.session().put(f"{self._url}/pet", data=pet.to_json())
-        return response.status_code, response.json()
+        response =  self.session.put(f"{self._url}/pet", json=pet.to_json())
+        return response.status_code, json.loads(response.content)
 
     def post_id(self, id: int, name: str, status: str) -> [Pet]:
-        response = requests.session().post(f"{self._url}/pet/{id}?name={name}&status={status}")
+        response =  self.session.post(f"{self._url}/pet/{id}?name={name}&status={status}")
         print(response)
 
         if response.ok:
@@ -31,7 +31,7 @@ class PetApi:
             return response.status_code, response.content
 
     def find_pet_by_tag(self, tags: [Tag]) -> [Pet]:
-        response = requests.session().get(url=f"{self._url}/pet/findByTags?tags={tags}")
+        response =  self.session.get(url=f"{self._url}/pet/findByTags?tags={tags}")
         result_list = []
         if response.ok:
             for pet in response.json():
@@ -41,7 +41,7 @@ class PetApi:
         return response.status_code, response.json()
 
     def get_pet_by_status(self, status: str) -> [Pet]:
-        response = requests.session().get(url=f"{self._url}/pet/findByStatus?status={status}")
+        response =  self.session.get(url=f"{self._url}/pet/findByStatus?status={status}")
         result_list = []
         if response.ok:
             for pet in response.json():
@@ -51,17 +51,17 @@ class PetApi:
         return response.status_code, response.json()
 
     def find_pet_by_id(self, id: int) -> (int, Pet):
-        response = requests.session().get(url=f"{self._url}/pet/{id}")
+        response =  self.session.get(url=f"{self._url}/pet/{id}")
         if response.ok:
-            return response.status_code, Pet(**response.json())
-        return response.status_code, response.json()
+            return response.status_code, Pet(**json.loads(response.content))
+        return response.status_code, response.content
 
     def delete_pet_by_id(self,id:int):
-        response = requests.session().delete(f"{self._url}/pet/{id}")
+        response =  self.session.delete(f"{self._url}/pet/{id}")
         return response.status_code, response.text
 
 
 if __name__ == '__main__':
     a = PetApi()
-    c, p = a.delete_pet_by_id(1)
+    c, p = a.find_pet_by_id(1)
     print(c, p)
