@@ -48,6 +48,9 @@ class Pet(BaseObject):
     def name(self) -> str:
         return self._name
 
+    @property
+    def photoUrls(self) -> list[str]:
+        return self._photoUrls
 
 
     @id.setter

@@ -125,7 +125,14 @@ def test_find_by_tag(get_pet_api):#***
         assert pet.tag.to_json() in tags
 
 
-
+def test_upload_image_to_pet(get_pet_api,get_pet):
+    LOGGER.info("test_upload_image_to_pet executing")
+    api = get_pet_api
+    image_path =  "/tmp/inflector3832436340023087946.tmp"
+    code, response = api.post_upload_photo(get_pet.id, image_path)
+    assert code == 200
+    LOGGER.info(response)
+    assert image_path in api.find_pet_by_id(get_pet.id)[1].photoUrls
 
 @pytest.mark.pet
 def test_delete_pet_by_id(get_pet, get_pet_api):
@@ -136,6 +143,8 @@ def test_delete_pet_by_id(get_pet, get_pet_api):
     LOGGER.info(f"code: {code} msg: {response}")
     assert code == 200
     assert api.find_pet_by_id(get_pet.id)[0] == 404
+
+
 
 ######### invalid ##################
 @pytest.mark.pet

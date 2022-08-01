@@ -57,10 +57,13 @@ class PetApi(BaseApi):
             return response.status_code, Pet(**response.json())
         return response.status_code, response.text
 
-    def delete_pet_by_id(self, id: int):
+    def delete_pet_by_id(self, id: int) -> (int,str):
         response = self.session.delete(f"{self._url}/{id}")
         return response.status_code, response.text
 
+    def post_upload_photo(self,id:int,file:str) -> (int,str):
+        response = self.session.post(f"{self._url}/{id}/uploadImage",data=file)
+        return response.status_code,response.text
 
 if __name__ == '__main__':
     a = PetApi()
