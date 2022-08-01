@@ -10,17 +10,35 @@ class Status(Enum):
 class Pet(BaseObject):
     def __init__(self,
                  id: int,
-                 name: str= None,
-                 category: Category = None,
-                 photoUrls= None,
-                 tags: list[Tag]= None,
-                 status:Status = None):
+                 name: str,
+                 category: Category = Category(10,"sample"),
+                 photoUrls:list = "sample",
+                 tags: [Tag] = Tag(1,"test"),
+                 status:Status = Status.available):
+        if not isinstance(id,int):
+            raise TypeError("id not integer")
+        if not isinstance(name,str):
+            raise TypeError("name not string")
+        if not isinstance(category,(Category,dict)):
+            raise TypeError("category not list or dict")
+        if not isinstance(photoUrls,(list,str)):
+            raise TypeError("photoUrls not list")
+        if not isinstance(tags,(list,Tag)):
+            raise TypeError("tags not list")
+        if not isinstance(status,(Status,str)):
+            raise TypeError("status not Status")
         self._id = id
         self._name = name
-        self._category = category
+        try:
+            self._category = category.to_json()
+        except AttributeError:
+            self._category = category
         self._photoUrls = photoUrls
         self._tags = tags
-        self._status = status
+        try:
+            self._status = status.value
+        except AttributeError:
+            self._status = status
 
     @property
     def id(self) -> int:

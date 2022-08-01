@@ -17,7 +17,7 @@ class PetApi(BaseApi):
 
     def put_pet(self, pet: Pet) -> [dict]:
         response = self.session.put(f"{self._url}", json=pet.to_json())
-        return response.status_code, response.json()
+        return response.status_code, response.text
 
 
     def post_id(self, id: int, name: str, status: str) -> [Pet]:
@@ -64,4 +64,5 @@ class PetApi(BaseApi):
 
 if __name__ == '__main__':
     a = PetApi()
-
+    r = a.find_pet_by_id(1)
+    print(r)

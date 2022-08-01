@@ -4,6 +4,10 @@ from Models.base_obj import BaseObject
 class Category(BaseObject):
 
     def __init__(self, id: int, name: str):
+        if not isinstance(id,int):
+            raise TypeError("id not integer")
+        if not isinstance(name,str):
+            raise TypeError("name not string")
         self._id = id
         self._name = name
 

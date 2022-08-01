@@ -8,7 +8,7 @@ from API.pets_api import PetApi
 from API.api_user import ApiUser
 from API.constent import USER_DATA, PET_DATA
 from API.store_api import StoreApi
-
+from Models.category import Category
 LOGGER = logging.getLogger(__name__)
 
 """
@@ -62,24 +62,25 @@ def test_post_pet(get_pet_api,get_pet):
 def test_put_pet(get_pet_api):
     LOGGER.info("test_put_pet executing")
     api = get_pet_api
-    pet = Pet(id=1,name="oracle")
+    pet = Pet(id=1,name="oracle",photoUrls=["string"],tags=[Tag(1,"test").to_json()],
+              status=Status.available,category=Category(7,"lions"))
     code, response = api.put_pet(pet)
     LOGGER.info(f"\nresponse pet = {response}")
     assert code == 200
-    assert response == api.find_pet_by_id(pet.id)[1].to_json()
+    assert pet.to_json() == api.find_pet_by_id(pet.id)[1].to_json()
 
 @pytest.mark.pet
 def test_find_pet_by_id(get_pet_api,get_pet):
     LOGGER.info("test_find_pet_by_id execute")
     api = get_pet_api
-    pet = Pet(id=1,name="oracle")
-    code, pet_res = api.find_pet_by_id(pet.id)
+    code, pet_res = api.find_pet_by_id(get_pet.id)
     try:
-        LOGGER.info(f"response: {pet.to_json()} code: {code}")
+        LOGGER.info(f"response: {pet_res} code: {code}")
     except Exception:
-        LOGGER.info(f"response: {pet} code: {code}")
+        LOGGER.info(f"response: {pet_res} code: {code}")
     assert code == 200
-    assert pet.id == pet_res.id and pet.name == pet_res.name
+    assert get_pet.to_json() == pet_res.to_json()
+
 
 @pytest.mark.pet
 def test_post_id_pet(get_pet_api,get_pet):
@@ -134,7 +135,27 @@ def test_delete_pet_by_id(get_pet, get_pet_api):
     code, response = api.delete_pet_by_id(pet.id)
     LOGGER.info(f"code: {code} msg: {response}")
     assert code == 200
-    assert response == "Pet deleted"
+    assert api.find_pet_by_id(get_pet.id)[0] == 404
+
+######### invalid ##################
+@pytest.mark.pet
+def test_put_pet_not_exists_pet(get_pet_api):
+    LOGGER.info("test_put_pet executing")
+    api = get_pet_api
+    pet = Pet(id=5579,name="oracle",photoUrls=["string"],tags=[Tag(1,"test").to_json()],
+              status=Status.available,category=Category(7,"lions"))
+    code, response = api.put_pet(pet)
+    LOGGER.info(f"\nresponse pet = {response}")
+    assert code == 404
+
+
+@pytest.mark.pet
+def test_find_pet_by_id_with_id_that_not_exists(get_pet_api):
+    LOGGER.info("test_find_pet_by_id_invalid_id execute")
+    api = get_pet_api
+    code, pet_res = api.find_pet_by_id(223432)
+    LOGGER.info(f"response: {pet_res} code: {code}")
+    assert code == 404
 
 
 ############## USER TESTS #############################
