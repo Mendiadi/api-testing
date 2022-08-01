@@ -7,8 +7,8 @@ from API.baseApi import BaseApi
 
 class PetApi(BaseApi):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self,url:str):
+        super().__init__(url)
         self._url = f"{self._base_url}/pet"
 
     def post_pet(self, pet: Pet) -> [dict]:

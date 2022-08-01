@@ -4,8 +4,8 @@ from API.baseApi import BaseApi
 
 class ApiUser(BaseApi):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self,url:str):
+        super().__init__(url)
         self._url = f"{self._base_url}/user"
 
     def get_user_login(self, username: str, password: str) -> (int, str):

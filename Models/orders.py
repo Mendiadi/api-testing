@@ -16,3 +16,7 @@ class Oreder(BaseObject):
         self._shipDate = shipDate
         self._status = status
         self._complete = complete
+
+    @property
+    def id(self)->int:
+        return self._id
