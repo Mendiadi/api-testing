@@ -10,14 +10,7 @@ class Tag(BaseObject):
     def name(self):
         return self._name
 
-    @name.setter
-    def name(self, value):
-        self._name = value
 
-    @name.deleter
-    def name(self):
-        del self._name
-
-    def __init__(self,id:int=1,name:str=""):
+    def __init__(self,id:int,name:str):
         self._id = id
         self._name = name

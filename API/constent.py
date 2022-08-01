@@ -1,7 +1,8 @@
 
+
 PET_DATA = {
-  "id": 1,
-  "name": "doggie",
+  "id": 112233,
+  "name": "test",
   "category": {
     "id": 1,
     "name": "Dogs"
@@ -16,24 +17,6 @@ PET_DATA = {
     }
   ],
   "status": "available"
-}
-
-PET_DATA2 = {  "id": 10,
-  "name": "sample",
-  "category": {
-    "id": 1,
-    "name": "Dogs"
-  },
-  "photoUrls": [
-    "string"
-  ],
-  "tags": [
-    {
-      "id": 1,
-      "name": "string"
-    }
-  ],
-  "status": "sold"
 }
 
 USER_DATA = {

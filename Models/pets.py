@@ -13,7 +13,7 @@ class Pet(BaseObject):
                  name: str= None,
                  category: Category = None,
                  photoUrls= None,
-                 tags: Tag= None,
+                 tags: list[Tag]= None,
                  status:Status = None):
         self._id = id
         self._name = name
@@ -30,9 +30,7 @@ class Pet(BaseObject):
     def name(self) -> str:
         return self._name
 
-    @name.setter
-    def name(self,name:str):
-        self._name = name
+
 
     @id.setter
     def id(self,id:int):
@@ -48,6 +46,9 @@ class Pet(BaseObject):
 
 
 if __name__ == '__main__':
-    pet = Pet(12342,"eadi")
-    print(pet.to_json())
+    pet = Pet(12342,"eadi",status=Status("dfgdg"))
+
+
+
+
 
