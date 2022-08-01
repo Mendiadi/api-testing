@@ -4,6 +4,14 @@ from base_obj import BaseObject
 class Address(BaseObject):
 
     def __init__(self, street: str, city: str, state: str, zip: str):
+        if not isinstance(street, str):
+            raise TypeError("street not string")
+        if not isinstance(city, str):
+            raise TypeError("city not string")
+        if not isinstance(state, str):
+            raise TypeError("state not string")
+        if not isinstance(zip, str):
+            raise TypeError("zip not string")
         self._street = street
         self._city = city
         self._state = state
