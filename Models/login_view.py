@@ -6,6 +6,9 @@ class LoginView(BaseObj):
 
     def __init__(self,userName:str,password:str):
         if not isinstance(userName,str):
-            pass
+            raise TypeError("username not string")
+        if not isinstance(password, str):
+            raise TypeError("password not string")
         self._userName = userName
         self._password = password
+

@@ -3,4 +3,4 @@
 """
 
 def pytest_addoption(parser):
-    parser.addoption("--url",action="store",default="https://bookstore.toolsqa.com/swagger/#/")
+    parser.addoption("--url",action="store",default="https://bookstore.toolsqa.com/")
