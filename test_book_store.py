@@ -7,13 +7,11 @@ from API.constant import selaUser,selaUserId
 LOGGER = logging.getLogger(__name__)
 @pytest.fixture(scope="session")
 def bearer_auth_session():
-    selaUser ={ "userName": "selaUser",
-                "password": "Aa123456@"}
-    hader = {'accept': 'application/json'}
-    res = requests.post( 'https://bookstore.toolsqa.com/Account/v1/GenerateToken',data=selaUser,headers=hader)
+    header = {'accept': 'application/json'}
+    res = requests.post( 'https://bookstore.toolsqa.com/Account/v1/GenerateToken',data=selaUser,headers=header)
     my_token = res.json()["token"]
     session = requests.session()
-    session.headers.update(hader)
+    session.headers.update(header)
     session.headers.update({'Authorization': f'Bearer {my_token}'})
     return session
 
