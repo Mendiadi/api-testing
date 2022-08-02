@@ -1,6 +1,6 @@
 from API.baseApi import BaseApi
 from Models.orders import Oreder
-
+import json
 
 class StoreApi(BaseApi):
 
@@ -8,11 +8,11 @@ class StoreApi(BaseApi):
         super().__init__(url)
         self._url = f"{self._base_url}/store"
 
-    def get_inventory(self):
+    def get_inventory(self) -> (int,json):
         response = self.session.get(f"{self._url}/inventory")
         return response.status_code, response.json()
 
-    def post_order(self, order: Oreder):
+    def post_order(self, order: Oreder) -> (int,json):
         response = self.session.post(url=f"{self._url}/order", json=order.to_json())
         return response.status_code, response.json()
 
@@ -22,6 +22,6 @@ class StoreApi(BaseApi):
             return response.status_code, Oreder(**response.json())
         return response.status_code, response.text
 
-    def delete_order_by_id(self, id: int):
+    def delete_order_by_id(self, id: int) -> (int,str):
         response = self.session.delete(url=f"{self._url}/order/{id}")
         return response.status_code, response.text

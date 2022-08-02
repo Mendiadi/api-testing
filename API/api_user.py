@@ -16,11 +16,11 @@ class ApiUser(BaseApi):
         response = self.session.get(f"{self._url}/logout")
         return response.status_code, response.text
 
-    def post_create_user(self, data: dict):
+    def post_create_user(self, data: dict) -> (int,str):
         response = self.session.post(f"{self._url}", json=data)
         return response.status_code, response.text
 
-    def post_create_user_with_list(self, data: list):
+    def post_create_user_with_list(self, data: list)  -> (int,str):
         response = self.session.post(f"{self._url}/createWithList", json=data)
         return response.status_code, response.text
 
@@ -31,10 +31,10 @@ class ApiUser(BaseApi):
             return response.status_code, user
         return response.status_code, response.text
 
-    def put_update_user(self, username: str, user: User):
+    def put_update_user(self, username: str, user: User)  -> (int,str):
         response = self.session.put(f"{self._url}/{username}", json=user.to_json())
         return response.status_code, response.text
 
-    def delete_user(self, username: str):
+    def delete_user(self, username: str)  -> (int,str):
         response = self.session.delete(f"{self._url}/{username}")
         return response.status_code, response.text

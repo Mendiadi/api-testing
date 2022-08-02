@@ -27,12 +27,21 @@ def url(pytestconfig):
 
 @pytest.fixture(scope="session")
 def get_user() -> User:
+    """
+    fixutre to init user obj
+    :return: User obj
+    """
     user = User(**USER_DATA)
     return user
 
 
 @pytest.fixture(scope="session")
 def get_user_api(url) -> ApiUser:
+    """
+    fixture to init user api obj
+    :param url: url to integrate
+    :return: ApiUser obj
+    """
     api = ApiUser(url)
     return api
 
