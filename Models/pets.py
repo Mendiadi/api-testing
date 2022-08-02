@@ -53,9 +53,9 @@ class Pet(BaseObject):
         return self._photoUrls
 
 
-    @id.setter
-    def id(self,id:int):
-        self._id = id
+    @name.setter
+    def name(self,name:str):
+        self._name = name
 
     @property
     def status(self) -> Status:
@@ -66,8 +66,7 @@ class Pet(BaseObject):
         return self._tags
 
 
-if __name__ == '__main__':
-    pet = Pet(12342,"eadi",status=Status("dfgdg"))
+
 
 
 

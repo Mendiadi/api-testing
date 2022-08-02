@@ -1,6 +1,5 @@
 import pytest
 import logging
-import allure
 from Models.tag import Tag
 from Models.pets import Pet, Status
 from Models.user import User
@@ -74,11 +73,11 @@ def test_post_pet(get_pet_api, get_pet):
 
 
 @pytest.mark.pet
-def test_put_pet(get_pet_api):
+def test_put_pet(get_pet_api,get_pet):
     LOGGER.info("test_put_pet executing")
     api = get_pet_api
-    pet = Pet(id=1, name="oracle", photoUrls=["string"], tags=[Tag(1, "test").to_json()],
-              status=Status.available, category=Category(7, "lions"))
+    pet = get_pet
+    pet.name = "yossi"
     code, response = api.put_pet(pet)
     LOGGER.info(f"\nresponse pet = {response}")
     assert code == 200
@@ -280,15 +279,15 @@ def test_get_inventory(get_store_api):
     LOGGER.info("test_get_inventory executing")
     api = get_store_api
     code, response = api.get_inventory()
-    count_placed_inventory = response['approved']
     LOGGER.info(f"code : {code}, response before adding:{response}")
     assert code == 200
-    order = Oreder(122,22,3,"2022-08-01T10:25:47.688+00:00",'approved',False)
+    count_placed_inventory = response['placed']
+    order = Oreder(122,22,3,"2022-08-01T10:25:47.688+00:00",'placed',False)
     code = api.post_order(order)[0]
     if code != 200:
-        pytest.skip("skipped because post order equal 400")
+        pytest.skip("skipped because post order not giving 200")
     res = api.get_inventory()[1]
-    count_placed_inventory_after_post = res['approved']
+    count_placed_inventory_after_post = res['placed']
     LOGGER.info(f"response before after{res}")
     api.delete_order_by_id(122)
     assert count_placed_inventory < count_placed_inventory_after_post
