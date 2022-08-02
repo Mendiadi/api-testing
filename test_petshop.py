@@ -41,8 +41,9 @@ def get_pet() -> Pet:
 def get_store_api() -> StoreApi:
     api = StoreApi(URL)
     return api
-
-
+@pytest.fixture(scope="session")
+def get_order():
+    return Oreder(**PET_ORDER_DATA)
 ################### PET TESTS ##############################
 
 @pytest.mark.pet
@@ -194,7 +195,7 @@ def test_post_create_user(get_user_api, get_user):
     code, response = api.post_create_user(get_user.to_json())
     LOGGER.info(f"response: {response}, code: {code}")
     assert code == 200
-    assert api.get_user_by_username(get_user.username).to_json() == get_user.to_json()
+    assert api.get_user_by_username(get_user.username)[1].to_json() == get_user.to_json()
 
 
 @pytest.mark.user
@@ -205,7 +206,7 @@ def test_post_create_users_list(get_user_api):
     LOGGER.info(f"response - {response}, code: {code}")
     assert code == 200
     for user_dict in list_of_users:
-        assert user_dict == api.get_user_by_username(user_dict['username']).to_json()
+        assert user_dict == api.get_user_by_username(user_dict['username'])[1].to_json()
 
 @pytest.mark.user
 def test_get_user_login(get_user,get_user_api):
@@ -236,8 +237,9 @@ def test_get_user_logout(get_user_api):
 @pytest.mark.user
 def test_get_user_by_username(get_user_api, get_user):
     api = get_user_api
-    response = api.get_user_by_username(get_user.username)
-    LOGGER.info(f"send : {get_user.to_json()}  \nresponse: {response.to_json()}")
+    code , response = api.get_user_by_username(get_user.username)
+    assert code == 200
+    LOGGER.info(f"send : {get_user.to_json()}  \nresponse: {response}")
     assert response.to_json() == get_user.to_json()
 
 
@@ -267,18 +269,18 @@ def test_get_inventory(get_store_api):
     LOGGER.info(f"code : {code}, response:{response}")
     assert code == 200
 
-def test_order_pet(get_store_api):
+def test_order_pet(get_store_api,get_order):
     LOGGER.info("test_order_pet executing")
     api = get_store_api
-    order = Oreder(**PET_ORDER_DATA)
+    order = get_order
     code, response = api.post_order(order)
     LOGGER.info(f"code : {code}, response:{response}")
     assert code == 200
     assert api.find_order_by_id(order.id)[1].to_json() == order.to_json()
 
-def test_find_order_by_id(get_store_api):
+def test_find_order_by_id(get_store_api,get_order):
     LOGGER.info("test_order_pet invalid id executing")
-    order = Oreder(**PET_ORDER_DATA)
+    order = get_order
     api = get_store_api
     code, response = api.find_order_by_id(order.id)
     LOGGER.info(f"code : {code}, response:{response.to_json()}")
@@ -292,3 +294,10 @@ def test_find_order_invalid_id(get_store_api):
     LOGGER.info(f"code : {code}, response:{response}")
     assert code == 404
 
+def test_delete_order_by_id(get_store_api,get_order):
+    LOGGER.info("test_delete_porder_by_id _executing")
+    api = get_store_api
+    code, response = api.delete_order_by_id(get_order.id)
+    LOGGER.info(f"code : {code}, response:{response}")
+    assert code == 200
+    assert api.find_order_by_id(get_order.id)[0] == 404

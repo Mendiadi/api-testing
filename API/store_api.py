@@ -20,3 +20,7 @@ class StoreApi(BaseApi):
         if response.ok:
             return response.status_code, Oreder(**response.json())
         return response.status_code, response.text
+
+    def delete_order_by_id(self,id:int):
+        response = self.session.delete(url=f"{self._url}/order/{id}")
+        return response.status_code, response.text
