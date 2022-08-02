@@ -1,4 +1,3 @@
-
 import pytest
 import logging
 from Models.tag import Tag
@@ -6,17 +5,20 @@ from Models.pets import Pet, Status
 from Models.user import User
 from API.pets_api import PetApi
 from API.api_user import ApiUser
-from API.constent import USER_DATA, PET_DATA,USER_DATA2,USER_DATA3,PET_ORDER_DATA
+from API.constent import USER_DATA, PET_DATA, USER_DATA2, USER_DATA3, PET_ORDER_DATA
 from API.store_api import StoreApi
 from Models.category import Category
 from Models.orders import Oreder
+
 LOGGER = logging.getLogger(__name__)
+
 
 ################# FIXTURES #################################
 
 @pytest.fixture(scope="session")
 def url(pytestconfig):
     return pytestconfig.getoption("url")
+
 
 @pytest.fixture(scope="session")
 def get_user() -> User:
@@ -45,13 +47,17 @@ def get_pet() -> Pet:
 def get_store_api(url) -> StoreApi:
     api = StoreApi(url)
     return api
+
+
 @pytest.fixture(scope="session")
 def get_order():
     return Oreder(**PET_ORDER_DATA)
+
+
 ################### PET TESTS ##############################
 
 @pytest.mark.pet
-def test_post_pet(get_pet_api,get_pet):
+def test_post_pet(get_pet_api, get_pet):
     LOGGER.info("test_post_pet executing")
     api = get_pet_api
     pet = get_pet
@@ -65,15 +71,16 @@ def test_post_pet(get_pet_api,get_pet):
 def test_put_pet(get_pet_api):
     LOGGER.info("test_put_pet executing")
     api = get_pet_api
-    pet = Pet(id=1,name="oracle",photoUrls=["string"],tags=[Tag(1,"test").to_json()],
-              status=Status.available,category=Category(7,"lions"))
+    pet = Pet(id=1, name="oracle", photoUrls=["string"], tags=[Tag(1, "test").to_json()],
+              status=Status.available, category=Category(7, "lions"))
     code, response = api.put_pet(pet)
     LOGGER.info(f"\nresponse pet = {response}")
     assert code == 200
     assert pet.to_json() == api.find_pet_by_id(pet.id)[1].to_json()
 
+
 @pytest.mark.pet
-def test_find_pet_by_id(get_pet_api,get_pet):
+def test_find_pet_by_id(get_pet_api, get_pet):
     LOGGER.info("test_find_pet_by_id execute")
     api = get_pet_api
     code, pet_res = api.find_pet_by_id(get_pet.id)
@@ -86,7 +93,7 @@ def test_find_pet_by_id(get_pet_api,get_pet):
 
 
 @pytest.mark.pet
-def test_post_id_pet(get_pet_api,get_pet):
+def test_post_id_pet(get_pet_api, get_pet):
     LOGGER.info("test_post_id_pet execute")
     api = get_pet_api
     pet = get_pet
@@ -98,8 +105,6 @@ def test_post_id_pet(get_pet_api,get_pet):
     assert code == 200
     get_pet = api.find_pet_by_id(pet.id)[1]
     assert get_pet.name == "adi" and get_pet.status == Status.sold.value
-
-
 
 
 @pytest.mark.pet
@@ -128,14 +133,15 @@ def test_find_by_tag(get_pet_api):
         assert pet.tag.to_json() in tags
 
 
-def test_upload_image_to_pet(get_pet_api,get_pet):
+def test_upload_image_to_pet(get_pet_api, get_pet):
     LOGGER.info("test_upload_image_to_pet executing")
     api = get_pet_api
-    image_path =  "/tmp/inflector3832436340023087946.tmp"
+    image_path = "/tmp/inflector3832436340023087946.tmp"
     code, response = api.post_upload_photo(get_pet.id, image_path)
     assert code == 200
     LOGGER.info(response)
     assert image_path in api.find_pet_by_id(get_pet.id)[1].photoUrls
+
 
 @pytest.mark.pet
 def test_delete_pet_by_id(get_pet, get_pet_api):
@@ -146,6 +152,7 @@ def test_delete_pet_by_id(get_pet, get_pet_api):
     LOGGER.info(f"code: {code} msg: {response}")
     assert code == 200
     assert api.find_pet_by_id(get_pet.id)[0] == 404
+
 
 @pytest.mark.pet
 def test_post_id_pet_not_exists(get_pet_api):
@@ -161,8 +168,8 @@ def test_post_id_pet_not_exists(get_pet_api):
 def test_put_pet_not_exists_pet(get_pet_api):
     LOGGER.info("test_put_pet executing")
     api = get_pet_api
-    pet = Pet(id=5579,name="oracle",photoUrls=["string"],tags=[Tag(1,"test").to_json()],
-              status=Status.available,category=Category(7,"lions"))
+    pet = Pet(id=5579, name="oracle", photoUrls=["string"], tags=[Tag(1, "test").to_json()],
+              status=Status.available, category=Category(7, "lions"))
     code, response = api.put_pet(pet)
     LOGGER.info(f"\nresponse pet = {response}")
     assert code == 404
@@ -176,13 +183,13 @@ def test_find_pet_by_id_with_id_that_not_exists(get_pet_api):
     LOGGER.info(f"response: {pet_res} code: {code}")
     assert code == 404
 
+
 def test_get_pet_by_status_invalid(get_pet_api):
     api = get_pet_api
     LOGGER.info("test_get_pet_by_status invalid executing")
     code, pets = api.get_pet_by_status("status")
     assert code == 400
     LOGGER.info(f"PET CONTENT OF STATUS {pets} : {code}\n")
-
 
 
 # def test_find_by_tag_invalid(get_pet_api):#***
@@ -205,20 +212,20 @@ def test_post_create_user(get_user_api, get_user):
 @pytest.mark.user
 def test_post_create_users_list(get_user_api):
     api = get_user_api
-    list_of_users = [User(**USER_DATA2).to_json(),User(**USER_DATA3).to_json()]
+    list_of_users = [User(**USER_DATA2).to_json(), User(**USER_DATA3).to_json()]
     code, response = api.post_create_user_with_list(list_of_users)
     LOGGER.info(f"response - {response}, code: {code}")
     assert code == 200
     for user_dict in list_of_users:
         assert user_dict == api.get_user_by_username(user_dict['username'])[1].to_json()
 
+
 @pytest.mark.user
-def test_get_user_login(get_user,get_user_api):
+def test_get_user_login(get_user, get_user_api):
     api = get_user_api
-    code, response = api.get_user_login(get_user.username,get_user.password)
+    code, response = api.get_user_login(get_user.username, get_user.password)
     LOGGER.info(f"code : {code} response: {response}")
     assert code == 200
-
 
 
 @pytest.mark.user
@@ -241,7 +248,7 @@ def test_get_user_logout(get_user_api):
 @pytest.mark.user
 def test_get_user_by_username(get_user_api, get_user):
     api = get_user_api
-    code , response = api.get_user_by_username(get_user.username)
+    code, response = api.get_user_by_username(get_user.username)
     assert code == 200
     LOGGER.info(f"send : {get_user.to_json()}  \nresponse: {response}")
     assert response.to_json() == get_user.to_json()
@@ -253,6 +260,7 @@ def test_delete_user(get_user_api, get_user):
     code, response = api.delete_user(get_user.username)
     LOGGER.info(f"code: {code}, response : {response}")
     assert code == 200
+
 
 ##### invalid #############
 
@@ -273,7 +281,8 @@ def test_get_inventory(get_store_api):
     LOGGER.info(f"code : {code}, response:{response}")
     assert code == 200
 
-def test_order_pet(get_store_api,get_order):
+
+def test_order_pet(get_store_api, get_order):
     LOGGER.info("test_order_pet executing")
     api = get_store_api
     order = get_order
@@ -282,7 +291,8 @@ def test_order_pet(get_store_api,get_order):
     assert code == 200
     assert api.find_order_by_id(order.id)[1].to_json() == order.to_json()
 
-def test_find_order_by_id(get_store_api,get_order):
+
+def test_find_order_by_id(get_store_api, get_order):
     LOGGER.info("test_order_pet invalid id executing")
     order = get_order
     api = get_store_api
@@ -291,6 +301,7 @@ def test_find_order_by_id(get_store_api,get_order):
     assert code == 200
     assert response.to_json() == order.to_json()
 
+
 def test_find_order_invalid_id(get_store_api):
     LOGGER.info("test_find_order invalid id executing")
     api = get_store_api
@@ -298,7 +309,8 @@ def test_find_order_invalid_id(get_store_api):
     LOGGER.info(f"code : {code}, response:{response}")
     assert code == 404
 
-def test_delete_order_by_id(get_store_api,get_order):
+
+def test_delete_order_by_id(get_store_api, get_order):
     LOGGER.info("test_delete_porder_by_id _executing")
     api = get_store_api
     code, response = api.delete_order_by_id(get_order.id)
