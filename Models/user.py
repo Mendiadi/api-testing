@@ -38,3 +38,11 @@ class User(BaseObject):
     @property
     def password(self) -> str:
         return self._password
+
+    @property
+    def firstname(self) -> str:
+        return self._firstName
+
+    @firstname.setter
+    def firstname(self,firstname:str):
+        self._firstName = firstname

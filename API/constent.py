@@ -1,4 +1,6 @@
-
+"""
+ file to hold const variables data
+"""
 
 PET_DATA = {
   "id": 112233,

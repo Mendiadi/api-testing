@@ -10,14 +10,32 @@ class PetApi(BaseApi):
         self._url = f"{self._base_url}/pet"
 
     def post_pet(self, pet: Pet) -> [dict]:
+        """
+        make post request with pet object
+
+        :param pet: Pet object to send
+        :return:  return response code and data
+        """
         response = self.session.post(f"{self._url}", json=pet.to_json())
         return response.status_code, response.text
 
     def put_pet(self, pet: Pet) -> [dict]:
+        """
+        make put request with pet data
+        :param pet: pet object to send
+        :return: response code and data
+        """
         response = self.session.put(f"{self._url}", json=pet.to_json())
         return response.status_code, response.text
 
     def post_id(self, id: int, name: str, status: str) -> [Pet]:
+        """
+        make post request with id and update pet
+        :param id: id of the pet to update
+        :param name: new name optimal
+        :param status: new status optimal
+        :return: response
+        """
         response = self.session.post(f"{self._url}/{id}?name={name}&status={status}")
         print(response)
 
@@ -29,6 +47,11 @@ class PetApi(BaseApi):
             return response.status_code, response.text
 
     def find_pet_by_tag(self, tags: [Tag]) -> [Pet]:
+        """
+        get request to find pets by tag
+        :param tags: list of Tags
+        :return: response
+        """
         response = self.session.get(url=f"{self._url}/findByTags?tags={tags}")
         result_list = []
         if response.ok:
@@ -61,9 +84,3 @@ class PetApi(BaseApi):
     def post_upload_photo(self, id: int, file: str) -> (int, str):
         response = self.session.post(f"{self._url}/{id}/uploadImage", data=file)
         return response.status_code, response.text
-
-
-if __name__ == '__main__':
-    a = PetApi()
-    r = a.find_pet_by_id(1)
-    print(r)

@@ -4,7 +4,7 @@ from API.baseApi import BaseApi
 
 class ApiUser(BaseApi):
 
-    def __init__(self,url:str):
+    def __init__(self, url: str):
         super().__init__(url)
         self._url = f"{self._base_url}/user"
 
@@ -24,15 +24,15 @@ class ApiUser(BaseApi):
         response = self.session.post(f"{self._url}/createWithList", json=data)
         return response.status_code, response.text
 
-    def get_user_by_username(self, username: str) -> [int,User]:
+    def get_user_by_username(self, username: str) -> [int, User]:
         response = self.session.get(f"{self._url}/{username}")
         if response.ok:
             user = User(**response.json())
             return response.status_code, user
-        return response.status_code,response.text
+        return response.status_code, response.text
 
-    def put_update_user(self, username: str):
-        response = self.session.put(f"{self._url}/{username}")
+    def put_update_user(self, username: str, user: User):
+        response = self.session.put(f"{self._url}/{username}", json=user.to_json())
         return response.status_code, response.text
 
     def delete_user(self, username: str):

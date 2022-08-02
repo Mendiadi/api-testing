@@ -1,6 +1,8 @@
 import requests
 
-
+"""
+    config base settings for all api subclasses
+"""
 
 class BaseApi:
     def __init__(self,url:str):

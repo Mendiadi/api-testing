@@ -36,6 +36,3 @@ class Oreder(BaseObject):
     def id(self)->int:
         return self._id
 
-if __name__ == '__main__':
-    o = Oreder(1,2,3,"afaf",OrderStatus.approved.value,True)
-    print(o.to_json())

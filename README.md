@@ -23,3 +23,12 @@ pytest -m "user" ./test_petshop.py
 ```commandline
 pytest -m "store" ./test_petshop.py 
 ```
+## run with allure report (u can use --url before ./test_petstore.py)
+```commandline
+ pytest --alluredir=reports\ .\test_petshop.py
+
+```
+## to see reports use
+```commandline
+allure serve reports/
+```

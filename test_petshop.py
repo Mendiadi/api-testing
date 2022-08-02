@@ -1,5 +1,6 @@
 import pytest
 import logging
+import allure
 from Models.tag import Tag
 from Models.pets import Pet, Status
 from Models.user import User
@@ -17,6 +18,11 @@ LOGGER = logging.getLogger(__name__)
 
 @pytest.fixture(scope="session")
 def url(pytestconfig):
+    """
+    fixture for handle url arg
+    :param pytestconfig: pytest config
+    :return: url to work with
+    """
     return pytestconfig.getoption("url")
 
 
@@ -133,6 +139,7 @@ def test_find_by_tag(get_pet_api):
         assert pet.tag.to_json() in tags
 
 
+@pytest.mark.pet
 def test_upload_image_to_pet(get_pet_api, get_pet):
     LOGGER.info("test_upload_image_to_pet executing")
     api = get_pet_api
@@ -184,6 +191,7 @@ def test_find_pet_by_id_with_id_that_not_exists(get_pet_api):
     assert code == 404
 
 
+@pytest.mark.pet
 def test_get_pet_by_status_invalid(get_pet_api):
     api = get_pet_api
     LOGGER.info("test_get_pet_by_status invalid executing")
@@ -231,9 +239,12 @@ def test_get_user_login(get_user, get_user_api):
 @pytest.mark.user
 def test_put_update_user(get_user_api, get_user):
     api = get_user_api
-    code, response = api.put_update_user(get_user.username)
+    user = get_user
+    user.firstname = "yossi"
+    code, response = api.put_update_user(get_user.username, user)
     LOGGER.info(f"code: {code}, response: {response}")
     assert code == 200
+    assert api.get_user_by_username(get_user.username)[1].firstname == "yossi"
 
 
 @pytest.mark.user
@@ -262,15 +273,6 @@ def test_delete_user(get_user_api, get_user):
     assert code == 200
 
 
-##### invalid #############
-
-# @pytest.mark.user
-# def test_get_user_login_invalid_pass_username(get_user_api):
-#     api = get_user_api
-#     code, response = api.get_user_login(3465346,3466)
-#     LOGGER.info(f"code : {code} response: {response}")
-#     assert code == 400
-
 ############ STORE TEST#####################
 
 @pytest.mark.store
@@ -278,10 +280,17 @@ def test_get_inventory(get_store_api):
     LOGGER.info("test_get_inventory executing")
     api = get_store_api
     code, response = api.get_inventory()
+    count_placed_inventory = response['placed']
     LOGGER.info(f"code : {code}, response:{response}")
     assert code == 200
+    order = Oreder(122,22,3,"2022-08-01T10:25:47.688+00:00","placed",False)
+    api.post_order(order)
+    count_placed_inventory_after_post = api.get_inventory()[1]['placed']
+    assert count_placed_inventory < count_placed_inventory_after_post
 
 
+
+@pytest.mark.store
 def test_order_pet(get_store_api, get_order):
     LOGGER.info("test_order_pet executing")
     api = get_store_api
@@ -292,6 +301,7 @@ def test_order_pet(get_store_api, get_order):
     assert api.find_order_by_id(order.id)[1].to_json() == order.to_json()
 
 
+@pytest.mark.store
 def test_find_order_by_id(get_store_api, get_order):
     LOGGER.info("test_order_pet invalid id executing")
     order = get_order
@@ -302,6 +312,7 @@ def test_find_order_by_id(get_store_api, get_order):
     assert response.to_json() == order.to_json()
 
 
+@pytest.mark.store
 def test_find_order_invalid_id(get_store_api):
     LOGGER.info("test_find_order invalid id executing")
     api = get_store_api
@@ -310,6 +321,7 @@ def test_find_order_invalid_id(get_store_api):
     assert code == 404
 
 
+@pytest.mark.store
 def test_delete_order_by_id(get_store_api, get_order):
     LOGGER.info("test_delete_porder_by_id _executing")
     api = get_store_api
