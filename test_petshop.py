@@ -6,7 +6,7 @@ from Models.pets import Pet, Status
 from Models.user import User
 from API.pets_api import PetApi
 from API.api_user import ApiUser
-from API.constent import USER_DATA, PET_DATA,USER_DATA2,USER_DATA3,PET_ORDER_DATA,URL
+from API.constent import USER_DATA, PET_DATA,USER_DATA2,USER_DATA3,PET_ORDER_DATA
 from API.store_api import StoreApi
 from Models.category import Category
 from Models.orders import Oreder
@@ -15,20 +15,24 @@ LOGGER = logging.getLogger(__name__)
 ################# FIXTURES #################################
 
 @pytest.fixture(scope="session")
+def url(pytestconfig):
+    return pytestconfig.getoption("url")
+
+@pytest.fixture(scope="session")
 def get_user() -> User:
     user = User(**USER_DATA)
     return user
 
 
 @pytest.fixture(scope="session")
-def get_user_api() -> ApiUser:
-    api = ApiUser(URL)
+def get_user_api(url) -> ApiUser:
+    api = ApiUser(url)
     return api
 
 
 @pytest.fixture(scope="session")
-def get_pet_api() -> PetApi:
-    api = PetApi(URL)
+def get_pet_api(url) -> PetApi:
+    api = PetApi(url)
     return api
 
 
@@ -38,8 +42,8 @@ def get_pet() -> Pet:
 
 
 @pytest.fixture(scope="session")
-def get_store_api() -> StoreApi:
-    api = StoreApi(URL)
+def get_store_api(url) -> StoreApi:
+    api = StoreApi(url)
     return api
 @pytest.fixture(scope="session")
 def get_order():
@@ -103,7 +107,7 @@ def test_post_id_pet(get_pet_api,get_pet):
                          [("sold", Status.sold.value),
                           ("pending", Status.pending.value),
                           ("available", Status.available.value)])
-def test_get_pet_by_status(get_pet_api, status, excepted):#***
+def test_get_pet_by_status(get_pet_api, status, excepted):
     api = get_pet_api
     LOGGER.info("test_get_pet_by_status executing")
     code, pets = api.get_pet_by_status(status)
@@ -114,7 +118,7 @@ def test_get_pet_by_status(get_pet_api, status, excepted):#***
 
 
 @pytest.mark.pet
-def test_find_by_tag(get_pet_api):#***
+def test_find_by_tag(get_pet_api):
     tags = [Tag(1, "test"), Tag(2, "foo")]
     LOGGER.info("test_find_by_tags execute")
     api = get_pet_api
@@ -172,7 +176,7 @@ def test_find_pet_by_id_with_id_that_not_exists(get_pet_api):
     LOGGER.info(f"response: {pet_res} code: {code}")
     assert code == 404
 
-def test_get_pet_by_status_invalid(get_pet_api):#***
+def test_get_pet_by_status_invalid(get_pet_api):
     api = get_pet_api
     LOGGER.info("test_get_pet_by_status invalid executing")
     code, pets = api.get_pet_by_status("status")

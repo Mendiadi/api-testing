@@ -54,9 +54,8 @@ PET_ORDER_DATA = {
   "id": 10,
   "petId": 198772,
   "quantity": 7,
-  "shipDate": "2022-08-01T10:25:47.688+00:00",#***
+  "shipDate": "2022-08-01T10:25:47.688+00:00",
   "status": "approved",
   "complete": True
 }
 
-URL =  "https://petstore3.swagger.io/api/v3"

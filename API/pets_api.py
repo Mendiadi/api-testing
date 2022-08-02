@@ -1,13 +1,11 @@
 from Models.pets import Pet
 from Models.tag import Tag
-from API.constent import *
-import json
 from API.baseApi import BaseApi
 
 
 class PetApi(BaseApi):
 
-    def __init__(self,url:str):
+    def __init__(self, url: str):
         super().__init__(url)
         self._url = f"{self._base_url}/pet"
 
@@ -18,7 +16,6 @@ class PetApi(BaseApi):
     def put_pet(self, pet: Pet) -> [dict]:
         response = self.session.put(f"{self._url}", json=pet.to_json())
         return response.status_code, response.text
-
 
     def post_id(self, id: int, name: str, status: str) -> [Pet]:
         response = self.session.post(f"{self._url}/{id}?name={name}&status={status}")
@@ -57,13 +54,14 @@ class PetApi(BaseApi):
             return response.status_code, Pet(**response.json())
         return response.status_code, response.text
 
-    def delete_pet_by_id(self, id: int) -> (int,str):
+    def delete_pet_by_id(self, id: int) -> (int, str):
         response = self.session.delete(f"{self._url}/{id}")
         return response.status_code, response.text
 
-    def post_upload_photo(self,id:int,file:str) -> (int,str):
-        response = self.session.post(f"{self._url}/{id}/uploadImage",data=file)
-        return response.status_code,response.text
+    def post_upload_photo(self, id: int, file: str) -> (int, str):
+        response = self.session.post(f"{self._url}/{id}/uploadImage", data=file)
+        return response.status_code, response.text
+
 
 if __name__ == '__main__':
     a = PetApi()
