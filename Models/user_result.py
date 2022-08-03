@@ -13,3 +13,6 @@ class UserResult(BaseObj):
     @property
     def username(self) -> str:
         return self._username
+    @property
+    def books(self) -> [str]:
+        return self._books

@@ -11,3 +11,16 @@ acc2 = {
   "userName": "myacc",
   "password": "st435!Sing"
 }
+
+BOOK_LIST_TO_ADD ={
+  "userId": selaUserId,
+  "collectionOfIsbns": [
+    {
+      "isbn": "9781491904244"
+    }
+  ]
+}
+BOOKS_DELETE = {
+  "isbn": "9781491904244",
+  "userId": selaUserId
+}

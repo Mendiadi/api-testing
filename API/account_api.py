@@ -22,7 +22,10 @@ class AccountApi(BaseApi):
     def delete_user_by_id(self,user_id:str):
         res = self.session.delete(f"{self._url}/User/{user_id}")
         if res.ok:
-            return res.status_code,res.text
+            try:
+                return res.status_code,UserResult(**res.json())
+            except TypeError:
+                pass
         return res.status_code,res.text
 
     def get_user_by_id(self,user_id:str):
