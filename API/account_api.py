@@ -6,8 +6,8 @@ import requests
 from API.constant import acc,acc_id
 
 class AccountApi(BaseApi):
-    def __init__(self,url:str,session):
-        super().__init__(url,session)
+    def __init__(self,url:str,header:dict):
+        super().__init__(url,header)
         self._url = f"{self._base_url}Account/v1"
 
 
@@ -28,5 +28,5 @@ class AccountApi(BaseApi):
     def get_user_by_id(self,user_id:str):
         res = self.session.get(f"{self._url}/User/{user_id}")
         if res.ok:
-            return res.status_code,res.json()
+            return res.status_code,UserResult(**res.json())
         return res.status_code,res.text

@@ -9,3 +9,7 @@ class UserResult(BaseObj):
     @property
     def userId(self) -> str:
         return self._userId
+
+    @property
+    def username(self) -> str:
+        return self._username

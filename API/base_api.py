@@ -5,9 +5,12 @@ from Models.login_view import LoginView
 """
 
 class BaseApi:
-    def __init__(self,url:str,session):
+    def __init__(self,url:str,header:dict):
         self._base_url = url
-        self.session = session
+        self.session = requests.session()
+        self._headers = {"accept":"application/json"}
+        self.session.headers.update(self._headers)
+        self.session.headers.update(header)
 
 
 

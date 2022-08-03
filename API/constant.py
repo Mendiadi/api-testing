@@ -4,9 +4,9 @@ acc = {
 }
 acc_id = "f754a71b-c6fe-446f-a424-506feede6958"
 
-selaUser = {"userName": "selaUser",
+selaUser = {"userName": "myAcc",
             "password": "Aa123456@"}
-selaUserId = "860189b4-4a95-4e96-8079-4a4f69ea3a0b",
+selaUserId = '6fc01df9-88a3-4153-9a7e-70d519afb6e0'
 acc2 = {
   "userName": "myacc",
   "password": "st435!Sing"
