@@ -1,5 +1,5 @@
 import json
-
+from Models.user_result import UserResult
 from API.base_api import BaseApi
 from Models.book import BookModel
 class BookApi(BaseApi):
@@ -25,3 +25,12 @@ class BookApi(BaseApi):
     def delete_books_to_user(self,user_id:str):
         res = self.session.delete(url=f"{self._url}Books/?UserId={user_id}")
         return res
+
+    def put_book_by_isbn(self,isbn:str,data:dict):
+        res = self.session.put(url=f"{self._url}Books/{isbn}",data=data)
+        if res.ok:
+            user = UserResult(**res.json())
+            return res.status_code, user
+        return res.status_code,res.text
+
+

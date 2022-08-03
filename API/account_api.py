@@ -1,9 +1,7 @@
 from API.base_api import BaseApi
-from Models.login_view import LoginView
 from Models.user_result import UserResult
 import json
-import requests
-from API.constant import acc,acc_id
+
 
 class AccountApi(BaseApi):
     def __init__(self,url:str,header:dict):
