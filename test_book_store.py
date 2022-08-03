@@ -24,6 +24,13 @@ def url(pytestconfig) -> str:
 
 @pytest.fixture(scope="module")
 def bearer_auth_session(url) -> [dict, UserResult]:
+    """
+    fixture to make authorize by the save acc data in
+    constant,py file and after it verify by post request
+    if the authorized complete success
+    :param url: url to work with
+    :return: header after adding bearer token
+    """
     res = requests.post(f'{url}Account/v1/GenerateToken', data=selaUser)
     my_token = res.json()["token"]
     header = {'Authorization': f'Bearer {my_token}'}
@@ -53,6 +60,11 @@ def account_auth() -> LoginView:
 
 
 def test_session_Bearer_token(account_api):
+    """
+    test if
+    :param account_api:
+    :return:
+    """
     api = account_api
     code, response = api.get_user_by_id(selaUserId)
     LOGGER.info(f"{response},code {code}")
