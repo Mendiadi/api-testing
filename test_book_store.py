@@ -10,14 +10,7 @@ from API.constant import selaUser, selaUserId, BOOK_LIST_TO_ADD, BOOKS_DELETE
 LOGGER = logging.getLogger(__name__)
 
 
-def bearer_auth_session() -> [dict, UserResult]:
-    res = requests.post('https://bookstore.toolsqa.com/Account/v1/GenerateToken', data=selaUser)
-    my_token = res.json()["token"]
-    header = {'Authorization': f'Bearer {my_token}'}
-    auth = requests.post("https://bookstore.toolsqa.com/Account/v1/Authorized", data=selaUser)
-    assert auth.status_code == 200
-    print(res.json())
-    return header
+
 
 
 @pytest.fixture(scope="session")
@@ -29,17 +22,28 @@ def url(pytestconfig) -> str:
     """
     return pytestconfig.getoption("url")
 
+@pytest.fixture(scope="module")
+def bearer_auth_session(url) -> [dict, UserResult]:
+    res = requests.post(f'{url}Account/v1/GenerateToken', data=selaUser)
+    my_token = res.json()["token"]
+    header = {'Authorization': f'Bearer {my_token}'}
+    auth = requests.post(f"{url}Account/v1/Authorized", data=selaUser)
+    assert auth.status_code == 200
+    print(res.json())
+    return header
+
 
 @pytest.fixture(scope="module")
-def account_api(url):
-    header = bearer_auth_session()
+def account_api(url,bearer_auth_session):
+    header = bearer_auth_session
     acc_api = AccountApi(url, header)
     return acc_api
 
 
 @pytest.fixture(scope="module")
-def book_api(url):
-    api = BookApi(url, bearer_auth_session())
+def book_api(url,bearer_auth_session):
+    Url,auth = url,bearer_auth_session
+    api = BookApi(Url, auth)
     return api
 
 
@@ -102,31 +106,34 @@ def test_get_books(book_api):
     except AttributeError:
         LOGGER.info(res)
 
+
 def test_put_book_invalid_isbn(book_api):
     LOGGER.info("test put book invalid isbn executing")
     data = {
-    "userId": "string",
-    "isbn": "string"
+        "userId": "string",
+        "isbn": "string"
     }
     api = book_api
-    code,res = api.put_book_by_isbn("235235",data)
+    code, res = api.put_book_by_isbn("235235", data)
     LOGGER.info(f"{res}")
     assert code == 400
+
 
 def test_put_book_empty_data(book_api):
     LOGGER.info("test put book empty data executing")
     api = book_api
-    code,res = api.put_book_by_isbn("9781593275846", {})
+    code, res = api.put_book_by_isbn("9781593275846", {})
     LOGGER.info(f"{res}")
     assert code == 400
+
 
 def test_put_book_to_user(book_api):
     LOGGER.info("test put book for user executing")
     api = book_api
     data = {"userId": selaUserId,
-             "isbn": "9781593275846"
+            "isbn": "9781593275846"
             }
-    code,res = api.put_book_by_isbn(data["isbn"],data)
+    code, res = api.put_book_by_isbn(data["isbn"], data)
     LOGGER.info(res)
     assert code == 200
 

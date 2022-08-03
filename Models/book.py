@@ -2,6 +2,9 @@ from Models.base_obj import BaseObj
 
 
 class BookModel(BaseObj):
+    """
+    Class for represent book model and type checking also
+    """
     def __init__(self, isbn: str, title: str, subTitle: str = None, author: str = None,
                  publish_date: str = None, publisher: str = None, pages: int = None, description: str = None,
                  website: str = None):

@@ -1,4 +1,6 @@
-
+"""
+  FILE FOR SAVE CONSTANT DATA
+"""
 
 selaUser = {"userName": "myAcc",
             "password": "Aa123456@"}
