@@ -2,15 +2,11 @@ import pytest
 from API.account_api import AccountApi
 from API.book_store_api import BookApi
 from Models.user_result import UserResult
-from Models.login_view import LoginView
 import logging
 import requests
-from API.constant import selaUser, selaUserId, BOOK_LIST_TO_ADD, BOOKS_DELETE
+from API.constant import selaUser, selaUserId, BOOK_LIST_TO_ADD,BOOKS_DELETE
 
 LOGGER = logging.getLogger(__name__)
-
-
-
 
 
 @pytest.fixture(scope="session")
@@ -21,6 +17,7 @@ def url(pytestconfig) -> str:
     :return: url to integrate
     """
     return pytestconfig.getoption("url")
+
 
 @pytest.fixture(scope="module")
 def bearer_auth_session(url) -> [dict, UserResult]:
@@ -39,22 +36,30 @@ def bearer_auth_session(url) -> [dict, UserResult]:
 
 
 @pytest.fixture(scope="module")
-def account_api(url,bearer_auth_session):
+def account_api(url, bearer_auth_session) -> AccountApi:
+    """
+    fixture to return account api obj
+    :param url: url from cli or default from pytest config
+    :param bearer_auth_session: header with authorized token
+    :return: AccountAip object
+    """
     header = bearer_auth_session
     acc_api = AccountApi(url, header)
     return acc_api
 
 
 @pytest.fixture(scope="module")
-def book_api(url,bearer_auth_session):
-    Url,auth = url,bearer_auth_session
+def book_api(url, bearer_auth_session) -> BookApi:
+    """
+    fixture to return book api obj
+    :param url: url from cli or default from pytest config
+    :param bearer_auth_session: header with authorized token
+    :return: BookApi object
+    """
+    Url, auth = url, bearer_auth_session
     api = BookApi(Url, auth)
     return api
 
-
-@pytest.fixture(scope="module")
-def account_auth() -> LoginView:
-    return selaUser
 
 def test_authorized(account_api):
     """
@@ -68,7 +73,12 @@ def test_authorized(account_api):
     assert res.status_code == 200
     assert res.text == "true"
 
-def test_session_Bearer_token(account_api):
+
+def test_get_account(account_api):
+    """
+    test if get user by id given the relative acc
+    excepted 200
+    """
     api = account_api
     code, response = api.get_user_by_id(selaUserId)
     LOGGER.info(f"{response},code {code}")
@@ -77,6 +87,11 @@ def test_session_Bearer_token(account_api):
 
 
 def test_session_Bearer_wrong_token(account_api):
+    """
+    test if u can do get with wrong token
+    excepted 401
+
+    """
     api = account_api
     Authorization = api.session.headers["Authorization"]
     token = Authorization.split()[1]
@@ -86,9 +101,14 @@ def test_session_Bearer_wrong_token(account_api):
     assert code == 401
 
 
-def test_post_account_exists(account_api, account_auth):
+def test_post_account_exists(account_api):
+    """
+    test post account with already exists user
+    excepted 406
+
+    """
     api = account_api
-    code, res = api.post_account(account_auth)
+    code, res = api.post_account(selaUser)
     LOGGER.info(f"code = {code}, res = {res}")
     assert code == 406
 
@@ -99,8 +119,6 @@ def test_post_account_invalid_password(account_api):
     code, res = api.post_account({"userName": "sample2", "pass": "invalid"})
     LOGGER.info(res)
     assert code == 400
-
-
 
 
 #########################################
@@ -157,6 +175,13 @@ def test_add_list_books(book_api, account_api):
     LOGGER.info(f" res = {res},")
     assert code == 200
     assert BOOK_LIST_TO_ADD['collectionOfIsbns']['isbn'] in res.books
+
+def test_delete_book_to_user(book_api):
+    LOGGER.info("test delete book to user executing")
+    api = book_api
+    res = api.delete_book(BOOKS_DELETE)
+    LOGGER.info(res.text)
+    assert res.status_code == 204
 
 
 def test_delete_books_to_user(book_api):

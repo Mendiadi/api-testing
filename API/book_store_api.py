@@ -59,3 +59,7 @@ class BookApi(BaseApi):
             user = UserResult(**res.json())
             return res.status_code, user
         return res.status_code, res.text
+
+    def delete_book(self,data:dict) -> requests.Response:
+        res = self.session.delete(url=f"{self._url}Book",data=data)
+        return res

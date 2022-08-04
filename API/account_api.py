@@ -1,5 +1,4 @@
 import requests
-
 from API.base_api import BaseApi
 from Models.user_result import UserResult
 import json
