@@ -64,7 +64,7 @@ def get_store_api(url) -> StoreApi:
 
 
 @pytest.fixture(scope="session")
-def get_order():
+def get_order() -> Oreder:
     return Oreder(**PET_ORDER_DATA)
 
 
@@ -82,7 +82,7 @@ def test_post_pet(get_pet_api, get_pet):
 
 
 @pytest.mark.pet
-def test_put_pet(get_pet_api,get_pet):
+def test_put_pet(get_pet_api, get_pet):
     LOGGER.info("test_put_pet executing")
     api = get_pet_api
     pet = get_pet
@@ -208,7 +208,6 @@ def test_get_pet_by_status_invalid(get_pet_api):
     LOGGER.info(f"PET CONTENT OF STATUS {pets} : {code}\n")
 
 
-
 ############## USER TESTS #############################
 @pytest.mark.user
 def test_post_create_user(get_user_api, get_user):
@@ -285,7 +284,7 @@ def test_get_inventory(get_store_api):
     LOGGER.info(f"code : {code}, response before adding:{response}")
     assert code == 200
     count_placed_inventory = response['placed']
-    order = Oreder(122,22,3,"2022-08-01T10:25:47.688+00:00",'placed',False)
+    order = Oreder(122, 22, 3, "2022-08-01T10:25:47.688+00:00", 'placed', False)
     code = api.post_order(order)[0]
     if code != 200:
         pytest.skip("skipped because post order not giving 200")
@@ -294,7 +293,6 @@ def test_get_inventory(get_store_api):
     LOGGER.info(f"response before after{res}")
     api.delete_order_by_id(122)
     assert count_placed_inventory < count_placed_inventory_after_post
-
 
 
 @pytest.mark.store

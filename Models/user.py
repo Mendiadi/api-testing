@@ -44,5 +44,5 @@ class User(BaseObject):
         return self._firstName
 
     @firstname.setter
-    def firstname(self,firstname:str):
+    def firstname(self, firstname: str):
         self._firstName = firstname
