@@ -208,13 +208,7 @@ def test_get_pet_by_status_invalid(get_pet_api):
     LOGGER.info(f"PET CONTENT OF STATUS {pets} : {code}\n")
 
 
-# def test_find_by_tag_invalid(get_pet_api):#***
-#     tags = 344
-#     LOGGER.info("test_find_by_tags invalid execute")
-#     api = get_pet_api
-#     code, response = api.find_pet_by_tag(tags)
-#     assert code == 400
-#     LOGGER.info(f"{response}")
+
 ############## USER TESTS #############################
 @pytest.mark.user
 def test_post_create_user(get_user_api, get_user):
