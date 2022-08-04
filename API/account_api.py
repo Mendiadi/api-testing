@@ -1,3 +1,5 @@
+import requests
+
 from API.base_api import BaseApi
 from Models.user_result import UserResult
 import json
@@ -48,3 +50,12 @@ class AccountApi(BaseApi):
             return res.status_code, UserResult(**res.json())
         return res.status_code, res.text
 
+    def post_post_authorize(self,data:dict) -> requests.Response:
+        """
+        make post request to check if user authorized
+        return code 200 and true if user authorized
+        :param data: data dict of user {"userName":"","password": ""}
+        :return: response obj
+        """
+        res = self.session.post(url=f"{self._url}/Authorized",data=data)
+        return res

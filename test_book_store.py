@@ -34,8 +34,6 @@ def bearer_auth_session(url) -> [dict, UserResult]:
     res = requests.post(f'{url}Account/v1/GenerateToken', data=selaUser)
     my_token = res.json()["token"]
     header = {'Authorization': f'Bearer {my_token}'}
-    auth = requests.post(f"{url}Account/v1/Authorized", data=selaUser)
-    assert auth.status_code == 200
     print(res.json())
     return header
 
@@ -58,13 +56,19 @@ def book_api(url,bearer_auth_session):
 def account_auth() -> LoginView:
     return selaUser
 
+def test_authorized(account_api):
+    """
+    test if user is authorized
+    :param account_api: account api fixture
+    """
+    LOGGER.info("test if user are authorized executing")
+    api = account_api
+    res = api.post_post_authorize(data=selaUser)
+    LOGGER.info(f"response : {res.text}")
+    assert res.status_code == 200
+    assert res.text == "true"
 
 def test_session_Bearer_token(account_api):
-    """
-    test if
-    :param account_api:
-    :return:
-    """
     api = account_api
     code, response = api.get_user_by_id(selaUserId)
     LOGGER.info(f"{response},code {code}")
@@ -97,13 +101,6 @@ def test_post_account_invalid_password(account_api):
     assert code == 400
 
 
-def test_delete_user_by_id(account_api):
-    LOGGER.info(f"delete_user_by_id executing")
-    api = account_api
-    code, res = api.delete_user_by_id(selaUserId)
-    LOGGER.info(f"code = {code}, res = {res}")
-    assert code == 200
-    assert api.get_user_by_id(selaUserId)[0] != 200
 
 
 #########################################
@@ -172,3 +169,12 @@ def test_delete_books_to_user(book_api):
     LOGGER.info(f" res = {res}")
     assert code == 200
     assert BOOK_LIST_TO_ADD['collectionOfIsbns']['isbn'] not in res.books
+
+
+def test_delete_user_by_id(account_api):
+    LOGGER.info(f"delete_user_by_id executing")
+    api = account_api
+    code, res = api.delete_user_by_id(selaUserId)
+    LOGGER.info(f"code = {code}, res = {res}")
+    assert code == 200
+    assert api.get_user_by_id(selaUserId)[0] != 200
