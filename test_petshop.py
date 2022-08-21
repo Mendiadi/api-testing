@@ -272,7 +272,10 @@ def test_delete_user(get_user_api, get_user):
     code, response = api.delete_user(get_user.username)
     LOGGER.info(f"code: {code}, response : {response}")
     assert code == 200
-
+    code, res = get_user_api.get_user_by_username(get_user.username)
+    LOGGER.info(code,res)
+    assert code == 404
+    assert "user not found" in res.lower()
 
 ############ STORE TEST#####################
 
@@ -286,13 +289,12 @@ def test_get_inventory(get_store_api):
     count_placed_inventory = response['placed']
     order = Oreder(122, 22, 3, "2022-08-01T10:25:47.688+00:00", 'placed', False)
     code = api.post_order(order)[0]
-    if code != 200:
-        pytest.skip("skipped because post order not giving 200")
-    res = api.get_inventory()[1]
-    count_placed_inventory_after_post = res['placed']
-    LOGGER.info(f"response before after{res}")
-    api.delete_order_by_id(122)
-    assert count_placed_inventory < count_placed_inventory_after_post
+    if code == 200:
+        res = api.get_inventory()[1]
+        count_placed_inventory_after_post = res['placed']
+        LOGGER.info(f"response before after{res}")
+        api.delete_order_by_id(122)
+        assert count_placed_inventory < count_placed_inventory_after_post
 
 
 @pytest.mark.store
