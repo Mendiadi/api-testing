@@ -36,3 +36,7 @@ class BookModel(BaseObj):
         self._pages = pages
         self._description = description
         self._website = website
+
+    @property
+    def isbn(self) -> str:
+        return self._isbn

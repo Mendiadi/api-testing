@@ -154,7 +154,7 @@ def test_put_book_empty_data(book_api):
     assert code == 400
 
 
-def test_put_book_to_user(book_api):
+def test_put_book_to_user(book_api,account_api):
     LOGGER.info("test put book for user executing")
     api = book_api
     data = {"userId": selaUserId,
@@ -163,6 +163,9 @@ def test_put_book_to_user(book_api):
     code, res = api.put_book_by_isbn(data["isbn"], data)
     LOGGER.info(res)
     assert code == 200
+    code, res = account_api.get_user_by_id(data['userId'])
+    LOGGER.info(code,res)
+    assert data["isbn"] in [book.isbn for book in res.books]
 
 
 def test_add_list_books(book_api, account_api):
@@ -202,4 +205,4 @@ def test_delete_user_by_id(account_api):
     code, res = api.delete_user_by_id(selaUserId)
     LOGGER.info(f"code = {code}, res = {res}")
     assert code == 200
-    assert api.get_user_by_id(selaUserId)[0] != 200
+    assert api.get_user_by_id(selaUserId)[0] == 401
