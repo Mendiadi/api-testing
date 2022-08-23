@@ -4,7 +4,7 @@ from API.book_store_api import BookApi
 from Models.user_result import UserResult
 import logging
 import requests
-from API.constant import selaUser, selaUserId, BOOK_LIST_TO_ADD,BOOKS_DELETE
+from API.constant import *
 
 LOGGER = logging.getLogger(__name__)
 
@@ -121,6 +121,18 @@ def test_post_account_invalid_password(account_api):
     assert code == 400
 
 
+def test_post_account(account_api):
+    """
+    This test will not pass after 1 run ! server bug!
+
+    """
+    code, res = account_api.post_account(NEW_ACC)
+    assert res.username == NEW_ACC['userName']
+    LOGGER.info(f"{res}")
+    code,res = account_api.delete_user_by_id(res.userId)
+    LOGGER.info(f"{code}, {res}")
+
+
 #########################################
 def test_get_books(book_api):
     LOGGER.info(f"get_books executing")
@@ -154,7 +166,7 @@ def test_put_book_empty_data(book_api):
     assert code == 400
 
 
-def test_put_book_to_user(book_api,account_api):
+def test_put_book_to_user(book_api, account_api):
     LOGGER.info("test put book for user executing")
     api = book_api
     data = {"userId": selaUserId,
@@ -164,7 +176,7 @@ def test_put_book_to_user(book_api,account_api):
     LOGGER.info(res)
     assert code == 200
     code, res = account_api.get_user_by_id(data['userId'])
-    LOGGER.info(code,res)
+    LOGGER.info(code, res)
     assert data["isbn"] in [book.isbn for book in res.books]
 
 
@@ -186,6 +198,7 @@ def test_get_book_exists(book_api):
     LOGGER.info(book.to_json())
     assert book.isbn == isbn_test_data
 
+
 def test_get_book_not_exists(book_api):
     isbn_test_data = "asdfasdfas"
     code = book_api.get_book(isbn_test_data)
@@ -193,7 +206,7 @@ def test_get_book_not_exists(book_api):
     assert code == 400
 
 
-def test_delete_book_to_user(book_api,account_api):
+def test_delete_book_to_user(book_api, account_api):
     LOGGER.info("test delete book to user executing")
     api = book_api
     res = api.delete_book(BOOKS_DELETE)
@@ -220,4 +233,6 @@ def test_delete_user_by_id(account_api):
     code, res = api.delete_user_by_id(selaUserId)
     LOGGER.info(f"code = {code}, res = {res}")
     assert code == 200
-    assert api.get_user_by_id(selaUserId)[0] == 401
+    code2, res2 = api.get_user_by_id(selaUserId)
+    assert code2 == 401
+    LOGGER.info(f"{code2}, {res}")
