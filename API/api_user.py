@@ -41,6 +41,11 @@ class ApiUser(BaseApi):
 
     def post_create_user_with_list(self, data: list) -> (int, str):
         response = self.session.post(f"{self._url}/createWithList", json=data)
+        if response.ok:
+            user_list = list()
+            for user in response.json():
+                user_list.append(user)
+            return response.status_code,user_list
         return response.status_code, response.text
 
     def get_user_by_username(self, username: str) -> [int, User]:

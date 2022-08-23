@@ -225,7 +225,7 @@ def test_post_create_users_list(get_user_api):
     code, response = api.post_create_user_with_list(list_of_users)
     LOGGER.info(f"response - {response}, code: {code}")
     assert code == 200
-    for user_dict in list_of_users:
+    for user_dict in response:
         assert user_dict == api.get_user_by_username(user_dict['username'])[1].to_json()
 
 
@@ -324,7 +324,7 @@ def test_find_order_by_id(get_store_api, get_order):
 def test_find_order_invalid_id(get_store_api):
     LOGGER.info("test_find_order invalid id executing")
     api = get_store_api
-    code, response = api.find_order_by_id(556)
+    code, response = api.find_order_by_id(500099876556)
     LOGGER.info(f"code : {code}, response:{response}")
     assert code == 404
 
