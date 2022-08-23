@@ -179,6 +179,20 @@ def test_add_list_books(book_api, account_api):
     assert code == 200
     assert BOOK_LIST_TO_ADD['collectionOfIsbns']['isbn'] in res.books
 
+
+def test_get_book_exists(book_api):
+    isbn_test_data = BOOKS_DELETE['isbn']
+    book = book_api.get_book(isbn_test_data)
+    LOGGER.info(book.to_json())
+    assert book.isbn == isbn_test_data
+
+def test_get_book_not_exists(book_api):
+    isbn_test_data = "asdfasdfas"
+    code = book_api.get_book(isbn_test_data)
+    LOGGER.info(code)
+    assert code == 400
+
+
 def test_delete_book_to_user(book_api,account_api):
     LOGGER.info("test delete book to user executing")
     api = book_api

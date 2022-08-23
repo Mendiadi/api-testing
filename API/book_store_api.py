@@ -60,6 +60,12 @@ class BookApi(BaseApi):
             return res.status_code, user
         return res.status_code, res.text
 
+    def get_book(self,isbn: str):
+        res = self.session.get(url=f"{self._url}Book?ISBN={isbn}")
+        if res.ok:
+            return BookModel(**res.json())
+        return res.status_code
+
     def delete_book(self,data:dict) -> requests.Response:
         res = self.session.delete(url=f"{self._url}Book",data=data)
         return res
