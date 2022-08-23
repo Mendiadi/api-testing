@@ -273,7 +273,7 @@ def test_delete_user(get_user_api, get_user):
     LOGGER.info(f"code: {code}, response : {response}")
     assert code == 200
     code, res = get_user_api.get_user_by_username(get_user.username)
-    LOGGER.info(code, res)
+    LOGGER.info(f"{code}, {res}")
     assert code == 404
     assert "user not found" in res.lower()
 
