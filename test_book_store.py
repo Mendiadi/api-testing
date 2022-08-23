@@ -179,12 +179,13 @@ def test_add_list_books(book_api, account_api):
     assert code == 200
     assert BOOK_LIST_TO_ADD['collectionOfIsbns']['isbn'] in res.books
 
-def test_delete_book_to_user(book_api):
+def test_delete_book_to_user(book_api,account_api):
     LOGGER.info("test delete book to user executing")
     api = book_api
     res = api.delete_book(BOOKS_DELETE)
     LOGGER.info(res.text)
     assert res.status_code == 204
+    assert BOOKS_DELETE not in account_api.get_user_by_id(selaUserId)[1].books
 
 
 def test_delete_books_to_user(book_api):
