@@ -1,5 +1,5 @@
 from Models.base_obj import BaseObject
-
+import json
 
 class User(BaseObject):
     def __init__(self, id: int, username: str, firstName: str, lastName: str, email: str, password: str, phone: str,
@@ -26,6 +26,9 @@ class User(BaseObject):
         self._password = password
         self._phone = phone
         self._userStatus = userStatus
+
+    def __str__(self) -> str:
+        return json.dumps(self.to_json())
 
     @property
     def id(self) -> int:
