@@ -9,9 +9,9 @@ class OrderStatus(Enum):
 
 
 class Oreder(BaseObject):
-    def __init__(self, id: int, petId: int, quantity: int, shipDate: str, status: (OrderStatus,str), complete: bool):
+    def __init__(self, id: int, petId: int, quantity: int, shipDate: str, status: (OrderStatus, str), complete: bool):
 
-        if not isinstance(id,int):
+        if not isinstance(id, int):
             raise TypeError("id not integer")
         if not isinstance(petId, int):
             raise TypeError("petId not integer")
@@ -19,7 +19,7 @@ class Oreder(BaseObject):
             raise TypeError("quantity not integer")
         if not isinstance(shipDate, str):
             raise TypeError("shipDate not string")
-        if not isinstance(status, (OrderStatus,str)):
+        if not isinstance(status, (OrderStatus, str)):
             raise TypeError("status not OrderStatus")
         if not isinstance(complete, bool):
             raise TypeError("complete not bool")
@@ -33,6 +33,5 @@ class Oreder(BaseObject):
         self._complete = complete
 
     @property
-    def id(self)->int:
+    def id(self) -> int:
         return self._id
-

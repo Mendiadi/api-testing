@@ -65,7 +65,8 @@ class Pet(BaseObject):
     def tag(self):
         return self._tags
 
-
+    def __eq__(self, other) -> bool:
+        return self.to_json() == other.to_json()
 
 
 

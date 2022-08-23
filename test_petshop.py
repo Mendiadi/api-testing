@@ -78,7 +78,7 @@ def test_post_pet(get_pet_api, get_pet):
     code, response = api.post_pet(pet)
     LOGGER.info(f"\nresponse pet = {response}")
     assert code == 200
-    assert api.find_pet_by_id(pet.id)[1].to_json() == pet.to_json()
+    assert api.find_pet_by_id(pet.id)[1] == pet
 
 
 @pytest.mark.pet
@@ -90,7 +90,7 @@ def test_put_pet(get_pet_api, get_pet):
     code, response = api.put_pet(pet)
     LOGGER.info(f"\nresponse pet = {response}")
     assert code == 200
-    assert pet.to_json() == api.find_pet_by_id(pet.id)[1].to_json()
+    assert pet == api.find_pet_by_id(pet.id)[1]
 
 
 @pytest.mark.pet
@@ -103,7 +103,7 @@ def test_find_pet_by_id(get_pet_api, get_pet):
     except Exception:
         LOGGER.info(f"response: {pet_res} code: {code}")
     assert code == 200
-    assert get_pet.to_json() == pet_res.to_json()
+    assert get_pet == pet_res
 
 
 @pytest.mark.pet
@@ -273,9 +273,10 @@ def test_delete_user(get_user_api, get_user):
     LOGGER.info(f"code: {code}, response : {response}")
     assert code == 200
     code, res = get_user_api.get_user_by_username(get_user.username)
-    LOGGER.info(code,res)
+    LOGGER.info(code, res)
     assert code == 404
     assert "user not found" in res.lower()
+
 
 ############ STORE TEST#####################
 
