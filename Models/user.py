@@ -46,3 +46,6 @@ class User(BaseObject):
     @firstname.setter
     def firstname(self, firstname: str):
         self._firstName = firstname
+
+    def __eq__(self, other) -> bool:
+        return self.to_json() == other.to_json()

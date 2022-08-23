@@ -215,7 +215,7 @@ def test_post_create_user(get_user_api, get_user):
     code, response = api.post_create_user(get_user.to_json())
     LOGGER.info(f"response: {response}, code: {code}")
     assert code == 200
-    assert api.get_user_by_username(get_user.username)[1].to_json() == get_user.to_json()
+    assert api.get_user_by_username(get_user.username)[1] == get_user
 
 
 @pytest.mark.user
@@ -263,7 +263,7 @@ def test_get_user_by_username(get_user_api, get_user):
     code, response = api.get_user_by_username(get_user.username)
     assert code == 200
     LOGGER.info(f"send : {get_user.to_json()}  \nresponse: {response}")
-    assert response.to_json() == get_user.to_json()
+    assert response == get_user
 
 
 @pytest.mark.user
